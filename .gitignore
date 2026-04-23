@@ -20,6 +20,8 @@
 /storage/*.key
 /storage/pail
 /vendor
+/database/seeders/LocalSeeders/
+/database/seeders/TestsSeeder.php
 _ide_helper.php
 Homestead.json
 Homestead.yaml
