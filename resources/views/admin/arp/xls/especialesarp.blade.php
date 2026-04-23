@@ -1,0 +1,19 @@
+<table>
+    <tbody>
+        <tr>
+            <td>asd</td>
+            <td>asd</td>
+            <td>asd</td>
+            <td>asd</td>
+            <td>asd</td>
+            <td>asd</td>
+            <td>asd</td>
+            <td>asd</td>
+            <td>asd</td>
+            <td>asd</td>
+            <td>asd</td>
+            <td>asd</td>
+            <td style="text-align: center" colspan="6">Descuentos</td>
+        </tr>
+    </tbody>
+</table>

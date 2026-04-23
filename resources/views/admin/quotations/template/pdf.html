@@ -1,0 +1,444 @@
+<html>
+
+<head>
+    <style>
+        /** 
+                Set the margins of the page to 0, so the footer and the header
+                can be of the full height and width !
+             **/
+        @page {
+            margin: 0cm 0cm;
+        }
+
+        /** Define now the real margins of every page in the PDF **/
+        body {
+            margin-top: 4cm;
+            margin-left: 1.5cm;
+            margin-right: 1.5cm;
+            margin-bottom: 2cm;
+            background-image: url('http://comercial.nnco.cloud/images/novo_bg.png');
+            background-repeat: no-repeat;
+            background-position: center;
+        }
+
+        /** Define the header rules **/
+        header {
+            position: fixed;
+            top: 1cm;
+            left: 1cm;
+            right: 1cm;
+            height: 2.5cm;
+        }
+
+        /** Define the footer rules **/
+        footer {
+            position: fixed;
+            bottom: 0cm;
+            left: 0cm;
+            right: 0cm;
+            height: 2cm;
+        }
+
+        table {
+            page-break-inside: auto;
+        }
+
+        #watermark {
+            position: fixed;
+            bottom: 20px;
+            left: 5%;
+            top: 10%;
+            width: 90%;
+            height: 750px;
+            opacity: .1;
+        }
+
+        .body {
+            font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
+        }
+
+        .row {
+            float: left;
+            width: 100%;
+        }
+
+        .novoheaderdata {
+            float: left;
+            width: 33%;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .text-right {
+            text-align: right;
+        }
+
+        .cotizacion {
+            float: left;
+            font-weight: bold;
+            font-size: 14pt;
+            width: 60%;
+        }
+
+        .lugar {
+            float: left;
+            font-weight: bold;
+            font-size: 14pt;
+            width: 20%;
+        }
+
+        .fecha {
+            float: left;
+            font-weight: bold;
+            font-size: 14pt;
+            width: 20%;
+        }
+
+        .pdfTitle {
+            float: left;
+            margin-top: 20px;
+            text-align: center;
+            width: 100%;
+        }
+
+        .title {
+            font-size: 14pt;
+            font-weight: bold;
+        }
+
+        .fecha {
+            font-size: 9pt;
+            text-align: center;
+        }
+
+        .logo {
+            float: right;
+            width: 15%;
+        }
+
+        .logo img {
+            height: auto;
+            width: 100%;
+        }
+
+        .tables {
+            float: left;
+            font-size: 10pt;
+            width: 100%;
+        }
+
+        .left-col {
+            float: left;
+            height: 500px;
+            width: 50%;
+        }
+
+        .right-col {
+            float: right;
+            height: 500px;
+            width: 50%;
+        }
+
+        .table-container {
+            background-color: #ccc;
+        }
+
+        .table-container-title {
+            font-size: 10pt;
+            font-weight: bold;
+            margin: 10px 0px 5px;
+        }
+
+        .table-mid {
+            width: 50%;
+        }
+
+        .tg {
+            border-collapse: collapse;
+            border-spacing: 0;
+            width: 100%;
+        }
+
+        .tg td {
+            font-family: Arial, sans-serif;
+            font-size: 14px;
+            padding: 10px 5px;
+            border-style: solid;
+            border-width: 1px;
+            overflow: hidden;
+            word-break: normal;
+            border-color: black;
+        }
+
+        .tg th {
+            font-family: Arial, sans-serif;
+            font-size: 14px;
+            font-weight: normal;
+            padding: 10px 5px;
+            border-style: solid;
+            border-width: 1px;
+            overflow: hidden;
+            word-break: normal;
+            border-color: black;
+        }
+
+        .tg .tg-ped4 {
+            background-color: #ddebf7;
+            border-color: inherit;
+            font-weight: bold;
+            text-align: center;
+            vertical-align: top
+        }
+
+        .tg .tg-0pky {
+            border-color: inherit;
+            text-align: left;
+            vertical-align: top
+        }
+
+        .table-coberturas-title {
+            font-size: 12pt;
+            font-weight: bold;
+            margin: 0px 0px 5px;
+            text-align: center;
+            width: 100%;
+        }
+
+        .terminos {
+            margin: 10px auto 20px;
+            text-align: justify;
+            width: 99%;
+        }
+
+        .terminos-title {
+            font-weight: bold;
+            font-size: 11pt;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+        }
+
+        .terminos-content {
+            font-size: 8pt;
+        }
+
+        .contact-numbers {
+            border: solid 1px #11155b;
+            color: #11155b;
+            padding: 10px;
+            text-align: center;
+            width: 100%
+        }
+
+    
+        .break {
+            page-break-before: always;
+        }
+
+    </style>
+
+</head>
+
+<body class="body">
+
+    <!-- Define header and footer blocks before your content -->
+    <header>
+        <div class="row">
+            <div class="novoheaderdata">
+                <div class="title">Novo Nordisk Colombia SAS</div>
+                Nit No. 900.557875-3
+            </div>
+            <div class="novoheaderdata text-center">
+                Dirección Calle 125 No. 19-24 P. 6 <br>
+                Bogotá D.C., Colombia
+            </div>
+            <div class="novoheaderdata text-right">
+                Tel No. (57) 1 314 9999
+            </div>
+        </div>
+        <div class="row">
+            <div class="novoheaderdata">&nbsp;</div>
+            <div class="novoheaderdata text-center">
+                <div class="pdfTitle">
+                    <div class="title">{{ $cotizacion->cliente->client_name }} </div>
+                    <div class="nit">{{ $cotizacion->cliente->client_nit }}</div>
+                    <div class="contacto">Nombre contacto: {{ $cotizacion->cliente->client_contact }} |
+                        {{ $cotizacion->cliente->client_position }}</div>
+                </div>
+            </div>
+            <div class="logo">
+                <img src="{{  asset('images/novo_logo.png') }}" alt="">
+            </div>
+        </div>
+        <div class="row">
+            <div class="cotizacion"> Cotizacion N' <br> {{ $cotizacion->id_quotation }} </div>
+            <div class="lugar">Bogotá D.C.,</div>
+            <div class="fecha">Fecha:<br>{{ date('d/m/Y', strtotime($cotizacion->created_at)) }}</div>
+        </div>
+    </header>
+
+    <!-- Wrap the cgontent of your PDF inside a main tag -->
+    <main>
+        <div class="row">
+            <div class="tables">
+                <table class="tg">
+                    <tr>
+                        <th class="tg-ped4">REGISTRO SANITARIO</th>
+                        <th class="tg-ped4">CANTIDAD COTIZADA</th>
+                        <th class="tg-ped4">VALOR UNIDAD MÍNIMA</th>
+                        <th class="tg-ped4">VALOR PRESENTACIÓN COMERCIAL</th>
+                        <th class="tg-ped4">VALOR TOTAL COTIZADO</th>
+                        <th class="tg-ped4">CONDICIONES FINANCIERAS</th>
+                    </tr>
+                    <tr>
+                        <?php
+                        for ($i=0; $i < sizeof($productos) ; $i++) { 
+                        ?>
+                        <td class="tg-0pky">{{ $productos[$i]->prod_name }} </td>
+                        <td class="tg-0pky"> {{ $productos[$i]->prod_name }}</td>
+                        <td class="tg-0pky">{{ $productos[$i]->prod_name }} </td>
+                        <td class="tg-0pky">{{ $productos[$i]->prod_name }} </td>
+                        <td class="tg-0pky">{{ $productos[$i]->prod_name }}</td>
+                        <td class="tg-0pky">{{ $productos[$i]->prod_name }} </td>
+                        <?php
+                        }   
+                        ?>
+                    </tr>
+                </table>
+            </div>
+            <div class="break"></div>
+            <div class="tables">
+                <table class="tl2">
+                    <tr>
+                        <td class="tg-0lax" colspan="2">
+                            <div class="terminos">
+                                <div class="terminos-title">
+                                    CONDICIONES COMERCIALES PORTAFOLIO NOVO NORDISK COLOMBIA S.A.S.
+                                    Nit No. 900.557.875-3
+                                </div>
+                                <div class="terminos-content">
+                                    CONDICIONES COMERCIALES PORTAFOLIO NOVO NORDISK COLOMBIA S.A.S.
+                                    Nit No. 900.557.875-3 <br>
+                                    Este documento (en adelante la "Oferta"), contiene los términos
+                                    y condiciones de venta de los productos
+                                    pertenecientes al portafolio de Novo Nordisk de Colombia S.A.S.
+                                    ("NOVO") descritos en esta Oferta que se
+                                    aplicarán a las cotización que NOVO presente a ustedes conforme
+                                    lo soliciten y a las órdenes de compra (la
+                                    "Orden de Compra" o las "Órdenes de Compra") que ustedes emitan
+                                    como clientes de NOVO (el "Cliente") a
+                                    partir de la fecha de este documento con vigencia hasta el 31 de
+                                    enero de 2018. PRIMERA - OBJETO.- En virtud
+                                    de la presente Oferta, NOVO se compromete a vender al Cliente
+                                    los Productos que éste le solicite durante la
+                                    Fecha de Vigencia, por medio de una Orden de Compra, de
+                                    conformidad con las condiciones comerciales y precio
+                                    que se establezcan en la respectiva Cotización. De conformidad
+                                    con lo anterior, la relación comercial entre
+                                    NOVO y el Cliente ésta constituida y amparada por ésta Oferta,
+                                    las Cotizaciones y las Órdenes de Compra.
+                                    SEGUNDA - DESCUENTOS FINACIEROS : El Cliente tendrá derecho a
+                                    los descuentos financieros que se establecen
+                                    en este documento de acuerdo con las parametrizaciones que sean
+                                    otorgadas dentro del código creado para la
+                                    facturación, siempre y cuando: (i) Sean canceladas las facturas
+                                    oportunamente en los plazos establecidos
+                                    para tal fin y estén descritas en la Vigencia establecida (ii).
+                                    En caso de que el Cliente incumpla los
+                                    términos y condiciones que se establecen en esta Oferta o en las
+                                    Cotizaciones, incluyendo sin limitación los
+                                    términos y condiciones de pago, NOVO podrá modificar o suspender
+                                    los descuentos y no aceptara aplicación de
+                                    estos de manera automática. TERCERA - CONDICIONES DE DESPACHO Y
+                                    POLÍTICA DE DEVOLUCIONES.- Las condiciones
+                                    de despacho y política de devoluciones de los Productos se
+                                    encuentran señaladas en la politica de
+                                    devoluciones la cual esta descrita en el trasverso de las
+                                    facturas. CUARTA - ENTREGA DE PEDIDOS.- Los
+                                    Productos serán entregados por NOVO, en el horario y sitio de
+                                    entrega acordados con el Cliente y aprobados
+                                    por NOVO, de conformidad con las siguientes consideraciones: (i)
+                                    El costo del transporte de los Productos al
+                                    sitio de entrega se encuentra incluido en el precio de venta de
+                                    los mismos, por consiguiente ésta suma es
+                                    asumida por NOVO; (ii) La entrega de Productos se realiza
+                                    únicamente en días hábiles; cuando se trata de
+                                    productos del portafolio diferentes a NovoSeven®. Aplicarán
+                                    entregas solicitadas de forma escrita en días
+                                    diferentes a los hábiles teniendo en cuenta la necesidad. (iii)
+                                    El plazo de entrega de productos, es de 5
+                                    días hábiles en Bogotá y de 7 días hábiles en otras ciudades de
+                                    Colombia; (iv) Al recibir los productos el
+                                    cliente se compromete a cumplir con lo señalado en el art. 2 de
+                                    la Ley 1231 de 2006 y entregar al operador
+                                    logístico la guía de transporte y/o la factura de venta emitida
+                                    por NOVO, según corresponda, indicando
+                                    nombre completo del funcionario que recibe el producto, número
+                                    de documento de identidad, firma, fecha y
+                                    sello (si aplica); (v)En caso de mora en el pago de las facturas
+                                    y de considerar que no haya garantías de
+                                    pago, NOVO está facultado para suspender despacho o terminar la
+                                    relación comercial con el Cliente. (vi) Los
+                                    despachos están sujetos a disponibilidad de inventario. QUINTA -
+                                    CONFIDENCIALIDAD.- El Cliente se compromete
+                                    a no divulgar a terceras personas y a mantener la
+                                    confidencialidad frente a cualquier información que
+                                    conozca o llegare a conocer sobre NOVO con motivo de la relación
+                                    contractual que surja con el Cliente en
+                                    virtud del presente documento, así como el contrato que por la
+                                    misma,se legalice, salvo que en cumplimiento
+                                    de una obligación legal o de requerimiento de una autoridad
+                                    competente deba revelarse, caso en el cual el
+                                    Cliente deberá informar previamente y por escrito a NOVO quién y
+                                    qué información le están solicitando. SEXTA
+                                    – RELACIÓN COMERCIAL.- La relación comercial que surge entre las
+                                    partes por el presente documento es de
+                                    compraventa de los productos establecidos en cada cotización o
+                                    en cada Orden de Compra y no de distribución,
+                                    agencia o relación distinta a la aquí establecida. SÉPTIMA.-
+                                    TERMINACIÓN.- en la cotización NOVO podrá
+                                    terminar la relación con el Cliente de manera unilateral, previa
+                                    notificación por escrito al Cliente con 15
+                                    días calendario de anticipación, sin que se genere indemnización
+                                    de ninguna especie. Adicionalmente, NOVO
+                                    podrá dar por terminada la relación con el Cliente de manera
+                                    unilateral, sin preaviso ni declaración
+                                    judicial: (i) Por inobservancia de las políticas de NOVO, que se
+                                    le hayan dado a conocer al Cliente de
+                                    tiempo en tiempo. (ii) Por conductas, preceptos o políticas del
+                                    Cliente que a criterio de NOVO puedan
+                                    afectar, atentar o poner en riesgo los intereses y reputación de
+                                    NOVO; (iii) Por mora en los pagos o
+                                    devolución de devolución de cheques por causas imputables al
+                                    Cliente; (iv) si el Cliente o cualquiera de sus
+                                    socios, representantes o directores es incluido en la Lista
+                                    SDNT, emitida por la Oficina de Control de
+                                    Bienes Extranjeros (OFAC) del Departamento del Tesoro de los
+                                    Estados Unidos o en las listas de terrorismo o
+                                    corrupción de cualquier oficina gubernamental u oficina
+                                    encargada de ello a nivel global (v) si el Cliente o
+                                    cualquiera de sus socios, representantes o directores realice
+                                    pagos a funcionarios gubernamentales que se
+                                    puedan enmarcar como violación a la Ley de Prácticas Anti
+                                    Corrupción de Estados Unidos y/o las normas
+                                    anticorrupción colombianas. La terminación de la relación
+                                    comercial por cualquiera de las razones aquí
+                                    señaladas no exime al Cliente del pago de las obligaciones
+                                    pendientes con NOVO. OCTAVA - OBLIGATORIEDAD.- Se
+                                    entiende que a partir de la fecha de recepción del presente
+                                    documento, cualquier Orden de Compra que el
+                                    Cliente emita será en aceptación de los términos y condiciones
+                                    aquí pactados. xxx Habeas data NOVENA - LEY
+                                    APLICABLE.- La presente Oferta será interpretada de conformidad
+                                    con las leyes de la República de Colombia.
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </main>
+</body>
+</html>

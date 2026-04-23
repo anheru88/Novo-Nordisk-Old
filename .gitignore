@@ -1,0 +1,17 @@
+/node_modules
+/public/hot
+/public/storage
+/public/ckeditor
+/storage/*.key
+/vendor
+.env
+.phpunit.result.cache
+Homestead.json
+Homestead.yaml
+npm-debug.log
+yarn-error.log
+README.md
+```
+/BackupLocal.sql
+.idea
+CHANGELOG.md
