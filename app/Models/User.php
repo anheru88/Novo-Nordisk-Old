@@ -2,31 +2,74 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Database\Factories\UserFactory;
-use Illuminate\Database\Eloquent\Attributes\Fillable;
-use Illuminate\Database\Eloquent\Attributes\Hidden;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Storage;
 
-#[Fillable(['name', 'email', 'password'])]
-#[Hidden(['password', 'remember_token'])]
 class User extends Authenticatable
 {
-    /** @use HasFactory<UserFactory> */
     use HasFactory, Notifiable;
 
     /**
-     * Get the attributes that should be cast.
+     * The attributes that should be hidden for arrays.
      *
-     * @return array<string, string>
+     * @var array
      */
-    protected function casts(): array
+    protected $hidden = [
+        'password', 'remember_token',
+    ];
+
+    /**
+     * The attributes that should be cast to native types.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'email_verified_at' => 'datetime',
+    ];
+
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = [
+        'name',
+        'email',
+        'password',
+    ];
+
+    public static function getUsers($idUser)
     {
-        return [
-            'email_verified_at' => 'datetime',
-            'password' => 'hashed',
-        ];
+        $user = \DB::table('users')
+        ->select('nickname','name','email','phone')
+        ->where('id', '=', $idUser)
+        ->orderBy('name', 'ASC')
+        ->get();
+        //dd($user);
+        return $user;
     }
+
+    public function discLevel(){
+        return $this->belongsTo(DiscountLevel::class,'authlevel');
+        //return $this->hasMany(DiscountLevel::class,'authlevel');
+    }
+
+    public function qapprovers(){
+        return $this->belongsTo(QuotationApprover::class,'ApproversUser');
+        //return $this->hasMany(QuotationApprover::class);
+    }
+
+    public function setEmailAttribute($value)
+    {
+        $this->attributes['email'] = strtolower($value);
+    }
+
+    public function getUrlPathAtribute()
+    {
+        return Storage::url($this->attributes['firm']);
+    }
+
 }
