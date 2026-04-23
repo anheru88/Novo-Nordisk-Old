@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "2c15c660f87441bcfb59cfa30153f0f3",
+    "content-hash": "00361d7d380c819ffb918b3ddee8e162",
     "packages": [
         {
             "name": "blade-ui-kit/blade-heroicons",
@@ -284,6 +284,81 @@
                 }
             ],
             "time": "2024-02-09T16:56:22+00:00"
+        },
+        {
+            "name": "caresome/filament-auth-designer",
+            "version": "v3.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/caresome/filament-auth-designer.git",
+                "reference": "0fd19029cb9ebd8b3881413bf4b2e516d6f0264f"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/caresome/filament-auth-designer/zipball/0fd19029cb9ebd8b3881413bf4b2e516d6f0264f",
+                "reference": "0fd19029cb9ebd8b3881413bf4b2e516d6f0264f",
+                "shasum": ""
+            },
+            "require": {
+                "filament/filament": "^4.0|^5.0",
+                "illuminate/contracts": "^11.0||^12.0||^13.0",
+                "php": "^8.2|^8.3|^8.4|^8.5",
+                "spatie/laravel-package-tools": "^1.16"
+            },
+            "require-dev": {
+                "larastan/larastan": "^3.0",
+                "laravel/pint": "^1.14",
+                "nunomaduro/collision": "^8.8",
+                "orchestra/testbench": "^10.0.0||^9.0.0",
+                "pestphp/pest": "^4.0",
+                "pestphp/pest-plugin-arch": "^4.0",
+                "pestphp/pest-plugin-laravel": "^4.0",
+                "phpstan/extension-installer": "^1.4",
+                "phpstan/phpstan-deprecation-rules": "^2.0",
+                "phpstan/phpstan-phpunit": "^2.0",
+                "rector/rector": "^2.2",
+                "spatie/laravel-ray": "^1.35"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Caresome\\FilamentAuthDesigner\\AuthDesignerServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Caresome\\FilamentAuthDesigner\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Caresome",
+                    "email": "dev@caresome.app",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Transform Filament's default auth pages into stunning, brand-ready experiences",
+            "homepage": "https://github.com/caresome/filament-auth-designer",
+            "keywords": [
+                "Authentication",
+                "auth-designer",
+                "auth-pages",
+                "caresome",
+                "filament",
+                "filament-plugin",
+                "laravel"
+            ],
+            "support": {
+                "issues": "https://github.com/caresome/filament-auth-designer/issues",
+                "source": "https://github.com/caresome/filament-auth-designer/tree/v3.1.0"
+            },
+            "time": "2026-04-08T00:05:50+00:00"
         },
         {
             "name": "chillerlan/php-qrcode",
@@ -857,6 +932,73 @@
                 }
             ],
             "time": "2025-10-31T18:51:33+00:00"
+        },
+        {
+            "name": "dutchcodingcompany/filament-developer-logins",
+            "version": "2.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/DutchCodingCompany/filament-developer-logins.git",
+                "reference": "09d89b50d35a2b289271f86d897c6b1e7b30e71e"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/DutchCodingCompany/filament-developer-logins/zipball/09d89b50d35a2b289271f86d897c6b1e7b30e71e",
+                "reference": "09d89b50d35a2b289271f86d897c6b1e7b30e71e",
+                "shasum": ""
+            },
+            "require": {
+                "filament/filament": "^4.0|^5.0",
+                "php": "^8.2",
+                "spatie/laravel-package-tools": "^1.15.0"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "^3.8",
+                "larastan/larastan": "^2.9|^3.0",
+                "nunomaduro/collision": "^7.0|^8.1",
+                "orchestra/testbench": "^9.0|^10.0",
+                "phpunit/phpunit": "^10.0|^11.0",
+                "spatie/laravel-ray": "^1.26"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "DutchCodingCompany\\FilamentDeveloperLogins\\FilamentDeveloperLoginsServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "DutchCodingCompany\\FilamentDeveloperLogins\\": "src",
+                    "DutchCodingCompany\\FilamentDeveloperLogins\\Tests\\": "tests",
+                    "DutchCodingCompany\\FilamentDeveloperLogins\\Database\\Factories\\": "database/factories"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Bram Raaijmakers",
+                    "email": "b.raaijmakers@protonmail.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Add buttons to the login page of Filament to login as a specific user.",
+            "homepage": "https://github.com/dutchcodingcompany/filament-developer-logins",
+            "keywords": [
+                "dutchcodingcompany",
+                "filament",
+                "filament-developer-logins",
+                "laravel"
+            ],
+            "support": {
+                "issues": "https://github.com/dutchcodingcompany/filament-developer-logins/issues",
+                "source": "https://github.com/dutchcodingcompany/filament-developer-logins"
+            },
+            "time": "2026-01-20T15:02:22+00:00"
         },
         {
             "name": "egulias/email-validator",

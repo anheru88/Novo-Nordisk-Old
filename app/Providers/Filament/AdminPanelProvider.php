@@ -2,6 +2,9 @@
 
 namespace App\Providers\Filament;
 
+use Caresome\FilamentAuthDesigner\AuthDesignerPlugin;
+use Caresome\FilamentAuthDesigner\Enums\MediaPosition;
+use DutchCodingCompany\FilamentDeveloperLogins\FilamentDeveloperLoginsPlugin;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
@@ -54,6 +57,32 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->authMiddleware([
                 Authenticate::class,
+            ])
+            ->plugins([
+                FilamentDeveloperLoginsPlugin::make()
+                    ->enabled(app()->environment('local'))
+                    ->users([
+                        'Admin' => 'ajimenezescobar@gmail.com',
+                    ]),
+                AuthDesignerPlugin::make()
+                    ->login(fn ($config) => $config
+                        ->media($this->randomLoginBackground())
+                        ->mediaPosition(MediaPosition::Right)
+                        ->mediaSize('50%')
+                    )
+                    ->themeToggle(),
             ]);
+    }
+
+    protected function randomLoginBackground(): ?string
+    {
+        $dir = public_path('images/auth-backgrounds');
+        $files = is_dir($dir) ? glob($dir.'/*.{jpg,jpeg,png,webp,gif,svg,avif,mp4,webm,mov,ogg}', GLOB_BRACE) : [];
+
+        if (empty($files)) {
+            return null;
+        }
+
+        return asset('images/auth-backgrounds/'.basename($files[array_rand($files)]));
     }
 }

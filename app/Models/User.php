@@ -2,13 +2,16 @@
 
 namespace App\Models;
 
+use Filament\Models\Contracts\FilamentUser;
+use Filament\Panel;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Storage;
 
-class User extends Authenticatable
+class User extends Authenticatable implements FilamentUser
 {
     use HasFactory, Notifiable;
 
@@ -72,4 +75,38 @@ class User extends Authenticatable
         return Storage::url($this->attributes['firm']);
     }
 
+    public function roles(): BelongsToMany
+    {
+        return $this->belongsToMany(Role::class, 'role_user')->withTimestamps();
+    }
+
+    public function permissions(): BelongsToMany
+    {
+        return $this->belongsToMany(Permission::class, 'permission_user')->withTimestamps();
+    }
+
+    public function hasRole(string|array $slug): bool
+    {
+        return $this->roles()->whereIn('slug', (array) $slug)->exists();
+    }
+
+    public function hasPermissionTo(string $slug): bool
+    {
+        if ($this->roles()->where('special', 'all-access')->exists()) {
+            return true;
+        }
+
+        if ($this->permissions()->where('slug', $slug)->exists()) {
+            return true;
+        }
+
+        return $this->roles()
+            ->whereHas('permissions', fn ($q) => $q->where('slug', $slug))
+            ->exists();
+    }
+
+    public function canAccessPanel(Panel $panel): bool
+    {
+        return ! $this->roles()->where('special', 'no-access')->exists();
+    }
 }
