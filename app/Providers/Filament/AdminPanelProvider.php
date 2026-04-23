@@ -129,9 +129,6 @@ class AdminPanelProvider extends PanelProvider
             ['Reportes',                   'Informes',           Heroicon::OutlinedChartPie,           'reportes.index',     10],
             ['Notas',                      'Informes',           Heroicon::OutlinedDocumentMinus,      'reportes.creditnotes', 20],
             ['SAP',                        'Informes',           Heroicon::OutlinedArrowDownTray,      'reportes.export',    30],
-
-            // Documentos
-            ['Repositorio de documentos',  'Documentos',         Heroicon::OutlinedFolderOpen,         'documents.index',    10],
         ];
 
         return array_map(fn (array $i) => NavigationItem::make($i[0])
