@@ -18,6 +18,11 @@ Dominios principales migrados o en migración:
 
 La data legacy se reimporta vía `database/seeders/LocalSeeders/` usando archivos en `database/seeders/LocalSeeders/data/` (TSV y SQL). Los seeders normalizan nombres de columnas al estándar Laravel (`id`, `client_id`, etc.) aunque el dump origen use otras convenciones.
 
+**Estado de normalización de columnas (migraciones ya aplicadas):**
+- PKs y FKs: renombradas a `id` / `{table}_id` (ej. `brand_id`, `folder_id`, `client_id`).
+- Atributos con prefijo redundante: renombrados a su forma corta (`brand_name`→`name`, `client_nit`→`nit`, `folder_name`→`name`, `folder_url`→`url`, `doc_name`→`name`, `file_folder`→`folder`, etc.). Ver `database/migrations/2026_04_24_120000_normalize_attribute_column_names.php` para el listado completo.
+- Cualquier seeder, modelo, form o resource nuevo debe usar los nombres **normalizados**; no reintroducir prefijos legacy.
+
 ## Stack
 
 - **PHP** 8.4 (composer requiere `^8.3`)
@@ -43,6 +48,11 @@ Usar **siempre** APIs nativas de Filament 5. No inventar Blade custom si existe 
   - `Filament\Support\Icons\Heroicon` (ej. `Heroicon::OutlinedFolderOpen`, `Heroicon::ArrowRight`)
 - **Acciones en secciones**: `Section::make()->footerActions([...])` / `->headerActions([...])` con `Filament\Actions\Action`.
 - **Navegación**: propiedades estáticas tipadas (`$navigationIcon` como `BackedEnum`, `$navigationGroup` como `UnitEnum|string`).
+- **Search/inputs reactivos en páginas custom**: preferir `Forms\Components\TextInput::make('propiedad')->live(debounce: 300)->prefixIcon(Heroicon::OutlinedMagnifyingGlass)` bindeado a una public property de la página (schema sin `statePath`) sobre HTML crudo con `Html::make()`. Filament genera el `wire:model.live.debounce.300` automáticamente.
+- **Archivos y paths de storage**:
+  - `FileUpload::make()->disk('public')->directory('uploads/...')` retorna el path completo incluyendo el prefijo. Al persistir, guardar `dirname($path)` en la columna `folder` para que coincida con la ruta real en disco.
+  - Validación visual de archivos ausentes: `IconAction` con `icon(fn () => exists ? DocumentArrowDown : ExclamationTriangle)`, `color('danger')` y `tooltip('Archivo no encontrado ...')` cuando `Storage::disk('public')->exists($path) === false`. Click-to-download sobre el nombre del archivo.
+- **Breadcrumbs in-section**: construir el trail con un `TextEntry` / `RepeatableEntry` en el schema de la propia `Section` (no apoyarse en el breadcrumb del page header cuando la vista tiene navegación interna por query params).
 
 ## Convenciones de código
 
@@ -65,4 +75,6 @@ Usar **siempre** APIs nativas de Filament 5. No inventar Blade custom si existe 
 - No usar strings donde existe un enum (`'bold'` → `FontWeight::Bold`, `'lg'` → `TextSize::Large`).
 - No agregar queries en loops de render; precargar con `with()` / `keyBy()`.
 - No renombrar columnas ya seedeadas desde el dump legacy sin actualizar el seeder correspondiente.
+- No reintroducir los prefijos `brand_`, `client_`, `folder_`, `doc_`, `file_`, `loc_`, etc. en columnas de atributo — ya fueron normalizados.
+- No usar `Html::make()` con inputs/svgs crudos cuando Filament provee el componente nativo (`TextInput`, `prefixIcon`).
 - No tocar `vendor/` ni editar `composer.json` a mano — usar `composer require/remove`.

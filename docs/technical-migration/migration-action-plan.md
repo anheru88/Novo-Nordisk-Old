@@ -1,9 +1,31 @@
 # Migration Action Plan
 
-> **From:** Laravel 6.2 / PHP 7.2 / Caffeinated Shinobi / Laravel Passport  
-> **To:** Laravel 12 / PHP 8.4 / Spatie Laravel Permission / Laravel Sanctum  
-> **Strategy:** Incremental module-by-module hot migration (both systems coexist)  
+> **From:** Laravel 6.2 / PHP 7.2 / Caffeinated Shinobi / Laravel Passport
+> **To (actual):** Laravel 13.6 / PHP 8.4 / Spatie Laravel Permission / Filament 5.6
+> **Strategy:** Incremental module-by-module hot migration (both systems coexist)
 > **Total Duration:** 24 weeks (6 months)
+>
+> ℹ️ This document was first drafted against Laravel 12 + Filament 3. The stack has since moved to **Laravel 13 + Filament 5**. Code snippets that mention `FilamentPanelProvider` (Filament 3) should be read as `AdminPanelProvider` (Filament 5); `Sanctum` is optional/future-work. Business phases, SQL, and checkpoints below remain accurate.
+
+---
+
+## 0. Progress Snapshot (updated April 2026)
+
+| Phase | Status | Notes |
+|-------|--------|-------|
+| 1 — Auth + Users + Roles | 🚧 In progress | Spatie installed (`b5a0dac`), RBAC resources scaffolded (`fde4f96`). Auth0 SDK re-integration pending. |
+| 2 — Products + Prices + Clients | ⬜ Not started | Models exist with normalized columns; Filament resources pending. |
+| 3 — Quotations | ⬜ Not started | Models exist. |
+| 4 — Negotiations + Authorizations | ⬜ Not started | Models exist. |
+| 5 — Liquidation + Credit Notes + SAP | ⬜ Not started | Models exist. |
+| 6 — ARP Simulator + Sales | ⬜ Not started | Models exist. |
+| 7 — Document Management | 🚧 In progress | Folder/Doc explorer + Client files explorer shipped in Filament 5 Infolist (breadcrumbs, click-to-download, missing-file validation, native search). Format templates pending. |
+| 8 — Reporting / Dashboard / Notif. | ⬜ Not started | — |
+
+**Cross-cutting work completed:**
+- DB normalization: PKs → `id`, FKs → `{table}_id` (`c975589`).
+- Attribute columns: legacy prefixes dropped across 28 tables (`e48ce3a`).
+- Models, Filament resources, forms and tables aligned to normalized names (`fef63f3`).
 
 ---
 

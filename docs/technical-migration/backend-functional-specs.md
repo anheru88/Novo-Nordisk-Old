@@ -1,7 +1,7 @@
 # Backend Functional Specifications
 
-> **Purpose:** Complete backend business rules, validation logic, data processing workflows, security rules, and API contracts for the Novo Nordisk CAM Tool.  
-> **Audience:** Backend developers building the Laravel 12 / FilamentPHP 3.x replacement.  
+> **Purpose:** Complete backend business rules, validation logic, data processing workflows, security rules, and API contracts for the Novo Nordisk CAM Tool.
+> **Audience:** Backend developers building the **Laravel 13.6 / FilamentPHP 5.6** replacement (originally drafted for L12 + Filament 3).
 > **Source:** Derived from static analysis of the Laravel 6.2 production codebase.
 
 ---

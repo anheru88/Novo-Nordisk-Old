@@ -1,8 +1,10 @@
 # Novo Nordisk CAM Tool — Technical Migration Documentation
 
-> **Migration Target:** Laravel 6.2 (PHP 7.2) → Laravel 12 (PHP 8.4) + FilamentPHP 3.x  
-> **Audience:** Development team, technical lead, project manager  
-> **Last Updated:** February 2026
+> **Migration Target (actual, in progress):** Laravel 6.2 (PHP 7.2) → **Laravel 13.6 (PHP 8.4) + FilamentPHP 5.6**
+> **Audience:** Development team, technical lead, project manager
+> **Last Updated:** April 2026
+>
+> ⚠️ Parts of these docs were drafted against an earlier target (L12 + Filament 3). The live stack has since moved to L13 + Filament 5; treat references to `L12`/`Filament 3` as historical intent. The **business logic, data flow, permissions and module scope remain valid**.
 
 ---
 
@@ -30,14 +32,23 @@ Rebuild the Novo Nordisk Colombia commercial process management platform ("CAM T
 - **Frontend:** AdminLTE 3 + Blade templates + Vue.js (minimal)
 - **Key packages:** Maatwebsite Excel, barryvdh/laravel-dompdf, Pusher, AWS SDK
 
-### Target State
-- **Framework:** Laravel 12.x (LTS support through 2027)
+### Target State (current)
+- **Framework:** Laravel 13.6
 - **PHP:** 8.4
-- **Admin Panel:** FilamentPHP 3.x (Livewire-based, no separate SPA)
-- **Auth:** Laravel Sanctum (web) + Auth0 SSO (same tenant)
-- **Authorization:** Spatie Laravel Permission
-- **Database:** Same MySQL schema, migrated incrementally (no destructive changes)
-- **Infrastructure:** AWS (RDS, EC2/ECS, S3, SQS)
+- **Admin Panel:** FilamentPHP 5.6 (Livewire-based, no separate SPA) — panel path `/admin`, provider `App\Providers\Filament\AdminPanelProvider`
+- **Auth:** Laravel session auth + Auth0 SSO (same tenant) — Sanctum available for future API tokens
+- **Authorization:** `spatie/laravel-permission` (replaced legacy Caffeinated Shinobi)
+- **Database:** MySQL; schema being normalized incrementally (PKs → `id`, FKs → `{table}_id`, attribute columns unprefixed). The legacy `nvn_` dump is seeded via `LocalSeeders` with column mapping.
+- **Infrastructure:** local dev on Herd / `novo.test`; cloud target TBD.
+
+### Progress Snapshot (April 2026)
+- ✅ Spatie Permission replacing Shinobi (see commit `b5a0dac`).
+- ✅ Filament 5 admin panel + RBAC resources + sidebar navigation.
+- ✅ PK/FK normalization (`c975589`).
+- ✅ Attribute column normalization for 28 tables (`e48ce3a`).
+- ✅ Documents module: Folder explorer + Client files explorer rebuilt in Filament 5 Infolist (breadcrumbs, click-to-download, missing-file validation, native search).
+- 🚧 Brands, Users, Roles resources scaffolded.
+- ⬜ Quotations, Negotiations, Authorizations, Liquidation, ARP Simulator, Reporting — pending.
 
 ---
 
