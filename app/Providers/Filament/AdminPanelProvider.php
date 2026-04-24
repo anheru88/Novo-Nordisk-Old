@@ -123,7 +123,6 @@ class AdminPanelProvider extends PanelProvider
             ['Simulador ARP',              'Operaciones',        Heroicon::OutlinedCalculator,         'arp.simulations',    30, false, true],
 
             // Configuración
-            ['Clientes',                   'Configuración',      Heroicon::OutlinedBuildingOffice2,    'clients.index',      10, false, false],
             ['Precios',                    'Configuración',      Heroicon::OutlinedBanknotes,          'prices.index',       30, false, false],
             ['Escalas',                    'Configuración',      Heroicon::OutlinedChartBar,           null,                 40, false, false],
             ['Formatos de documentos',     'Configuración',      Heroicon::OutlinedDocumentDuplicate,  null,                 50, false, true],
