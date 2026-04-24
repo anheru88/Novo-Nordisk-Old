@@ -8,7 +8,7 @@ class CreditNote extends Model
 {
     //
     protected $fillable = [
-        'doc_name',
+        'name',
     ];
 
     public function creditNotesClients()

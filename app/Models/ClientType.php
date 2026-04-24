@@ -14,7 +14,7 @@ class ClientType extends Model
      * @var array
      */
     protected $fillable = [
-        'type_name',
+        'name',
     ];
 
     /*public function cliente()

@@ -6,30 +6,28 @@ use Illuminate\Database\Eloquent\Model;
 
 class Status extends Model
 {
-        
     public $timestamps = false;
-//Tabla a negociar
+    // Tabla a negociar
 
-        protected $table = 'status';
+    protected $table = 'status';
 
-        protected $primaryKey = 'status_id';
+    protected $primaryKey = 'status_id';
 
-        /**
-         * Los atributos que son asignados en masa
-         *
-         * @var array
-         */
-        protected $fillable = [
-        'status_name',
-        'status_color',
-        'status_symbol',
+    /**
+     * Los atributos que son asignados en masa
+     *
+     * @var array
+     */
+    protected $fillable = [
+        'name',
+        'color',
+        'symbol',
     ];
 
-
-        public function ScopeGetName($query,$status_id)
-        {
-            return $query->where('status_id', $status_id);
-        }
+    public function ScopeGetName($query, $status_id)
+    {
+        return $query->where('status_id', $status_id);
+    }
 
     public function quotationxstatus()
     {

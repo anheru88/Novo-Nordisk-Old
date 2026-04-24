@@ -19,8 +19,8 @@ class ProductHistory extends Model
         'comments',
         'v_institutional_price',
         'v_commercial_price',
-        'prod_valid_date_ini',
-        'prod_valid_date_end',
+        'valid_date_ini',
+        'valid_date_end',
     ];
 
     public function productH()

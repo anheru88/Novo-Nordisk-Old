@@ -12,7 +12,7 @@ class DocFormatType extends Model
      * @var array
      */
     protected $fillable = [
-        'format_name',
+        'name',
     ];
 
     public function docFormats()

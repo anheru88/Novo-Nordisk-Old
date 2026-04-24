@@ -29,7 +29,7 @@ class DocRepositoryRelationManager extends RelationManager
     {
         return $schema
             ->components([
-                FileUpload::make('doc_name')
+                FileUpload::make('name')
                     ->label('Archivo')
                     ->disk('public')
                     ->directory(fn () => 'uploads/'.$this->folderPath())
@@ -44,9 +44,9 @@ class DocRepositoryRelationManager extends RelationManager
     public function table(Table $table): Table
     {
         return $table
-            ->recordTitleAttribute('doc_name')
+            ->recordTitleAttribute('name')
             ->columns([
-                TextColumn::make('doc_name')
+                TextColumn::make('name')
                     ->label('Archivo')
                     ->formatStateUsing(fn (?string $state) => $state ? basename($state) : '—')
                     ->searchable(),
@@ -63,11 +63,11 @@ class DocRepositoryRelationManager extends RelationManager
                 Action::make('download')
                     ->label('Descargar')
                     ->icon('heroicon-o-arrow-down-tray')
-                    ->url(fn ($record) => $record->doc_name ? Storage::disk('public')->url($record->doc_name) : null, shouldOpenInNewTab: true)
-                    ->visible(fn ($record) => $record->doc_name && Storage::disk('public')->exists($record->doc_name)),
+                    ->url(fn ($record) => $record->name ? Storage::disk('public')->url($record->name) : null, shouldOpenInNewTab: true)
+                    ->visible(fn ($record) => $record->name && Storage::disk('public')->exists($record->name)),
                 DeleteAction::make()
-                    ->after(fn ($record) => $record->doc_name
-                        ? Storage::disk('public')->delete($record->doc_name)
+                    ->after(fn ($record) => $record->name
+                        ? Storage::disk('public')->delete($record->name)
                         : null),
             ])
             ->toolbarActions([
@@ -82,6 +82,6 @@ class DocRepositoryRelationManager extends RelationManager
         /** @var FolderRepository $folder */
         $folder = $this->getOwnerRecord();
 
-        return $folder->folder_url ?: (string) $folder->getKey();
+        return $folder->url ?: (string) $folder->getKey();
     }
 }

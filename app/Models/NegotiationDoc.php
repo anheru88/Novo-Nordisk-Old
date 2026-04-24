@@ -14,8 +14,8 @@ class NegotiationDoc extends Model
      */
     protected $fillable = [
         'negotiation_id',
-        'doc_name',
-        'file_folder',
+        'name',
+        'folder',
     ];
 
     // Upload and relation QuotationxFiles
@@ -27,8 +27,8 @@ class NegotiationDoc extends Model
             $fileName = $file->getClientOriginalName();
             $fileReg = new NegotiationDoc;
             $fileReg->negotiation_id = $folder;
-            $fileReg->file_folder = '/uploads/negotiations/'.$folder;
-            $fileReg->doc_name = $fileName;
+            $fileReg->folder = '/uploads/negotiations/'.$folder;
+            $fileReg->name = $fileName;
             if ($fileReg->save()) {
                 $file->move($path, $fileName);
             }

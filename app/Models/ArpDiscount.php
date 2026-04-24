@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class ArpDiscount extends Model
 {
     protected $fillable = [
-        'discount_name',
+        'name',
         'discount_percentage',
         'discount_units',
         'discount_clients',

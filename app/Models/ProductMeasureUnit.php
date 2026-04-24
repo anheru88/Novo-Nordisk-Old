@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class ProductMeasureUnit extends Model
 {
     protected $fillable = [
-        'unit_name',
+        'name',
     ];
 
     public function productScalesLevel()

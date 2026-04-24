@@ -15,23 +15,23 @@ class Negotiation extends Model
         'authorizer_user_id',
         'channel_id',
         'id_auth_level',
-        'negotiation_date_ini',
-        'negotiation_date_end',
+        'date_ini',
+        'date_end',
         'pre_approved',
         'comments',
         'created_by',
-        'negotiation_consecutive',
-        'negotiation_number',
+        'consecutive',
+        'number',
         'status_id',
         'pdf_content',
     ];
 
     public $sortable = [
         'id',
-        'negotiation_consecutive',
+        'consecutive',
         'client_id',
-        'negotiation_date_ini',
-        'negotiation_date_end',
+        'date_ini',
+        'date_end',
         'status_id',
     ];
 
@@ -49,7 +49,7 @@ class Negotiation extends Model
         $date = Carbon::yesterday();
         $yesterday = $date->toDateTimeString();
         // dd($yesterday);
-        $negotiationsActive = Negotiation::where('negotiation_date_end', '<=', $yesterday)
+        $negotiationsActive = Negotiation::where('date_end', '<=', $yesterday)
             ->where(function ($query) {
                 return $query
                     ->where('is_authorized', '<', 6)
@@ -83,8 +83,8 @@ class Negotiation extends Model
                 ->whereHas('negotiation', function ($query) use ($dateIni, $status, $today) {
                     return $query
                         ->where('status_id', $status)
-                        ->whereDate('negotiation_date_ini', $today)
-                        ->whereDate('negotiation_date_ini', $dateIni);
+                        ->whereDate('date_ini', $today)
+                        ->whereDate('date_ini', $dateIni);
                 })
                 ->where('discount_type', $product->discount_type)
                 ->where('negotiation_id', '!=', $id)

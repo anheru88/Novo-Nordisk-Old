@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class ArpSimulation extends Model
 {
     protected $fillable = [
-        'simulation_name',
+        'name',
     ];
 
     // Relations

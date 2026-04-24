@@ -8,7 +8,7 @@ class NegotiationError extends Model
 {
     protected $fillable = [
         'negotiation_det_id',
-        'negotiation_error',
+        'error',
     ];
 
     public function negotiationDet()

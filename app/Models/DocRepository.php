@@ -14,7 +14,7 @@ class DocRepository extends Model
      * @var array
      */
     protected $fillable = [
-        'doc_name',
+        'name',
         'folder_id',
         'size',
     ];

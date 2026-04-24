@@ -12,7 +12,7 @@ class NegotiationConcept extends Model
      * @var array
      */
     protected $fillable = [
-        'name_concept',
+        'name',
         'concept_percentage',
         'concept_compress',
         'sap_concept',

@@ -14,7 +14,7 @@ class DistChannel extends Model
      * @var array
      */
     protected $fillable = [
-        'channel_name',
+        'name',
     ];
 
     /* public function cliente_channel()

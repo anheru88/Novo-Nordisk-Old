@@ -12,9 +12,9 @@ class PaymentTerm extends Model
      * @var array
      */
     protected $fillable = [
-        'payterm_name',
-        'payterm_percent',
-        'payterm_code',
+        'name',
+        'percent',
+        'code',
     ];
 
     public function clients()

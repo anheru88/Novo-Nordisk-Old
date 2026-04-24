@@ -15,34 +15,34 @@ class Client extends Model
      */
     protected $fillable = [
         'client_type_id',
-        'client_name',
-        'client_quote_name',
-        'client_nit',
-        'client_sap_name',
-        'client_sap_code',
+        'name',
+        'quote_name',
+        'nit',
+        'sap_name',
+        'sap_code',
         'client_channel_id',
         'department_id',
         'city_id',
-        'client_contact',
-        'client_phone',
-        'client_email',
-        'client_credit',
+        'contact',
+        'phone',
+        'email',
+        'credit',
         'diab_contact_id',
         'biof_contact_id',
         'created_by',
-        'client_address',
-        'client_position',
-        'client_area_code',
+        'address',
+        'position',
+        'area_code',
         'active',
         'payterm_id',
-        'client_email_secondary',
+        'email_secondary',
     ];
 
     public static function getClientID($nit)
     {
         $client = \DB::table('clients')
             ->select('id')
-            ->where('client_nit', '=', $nit)
+            ->where('nit', '=', $nit)
             ->first('id');
 
         return $client->id;

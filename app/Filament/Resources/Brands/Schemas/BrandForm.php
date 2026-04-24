@@ -11,7 +11,7 @@ class BrandForm
     {
         return $schema
             ->components([
-                TextInput::make('brand_name')
+                TextInput::make('name')
                     ->label('Nombre')
                     ->required()
                     ->maxLength(255)

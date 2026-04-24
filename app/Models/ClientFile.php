@@ -13,8 +13,8 @@ class ClientFile extends Model
      */
     protected $fillable = [
         'client_id',
-        'file_folder',
-        'file_name',
+        'folder',
+        'name',
         'size',
     ];
 

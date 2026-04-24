@@ -22,7 +22,7 @@ class ClientFileResource extends Resource
 
     protected static ?string $pluralModelLabel = 'Docs de Clientes';
 
-    protected static ?string $recordTitleAttribute = 'file_name';
+    protected static ?string $recordTitleAttribute = 'name';
 
     public static function getPages(): array
     {

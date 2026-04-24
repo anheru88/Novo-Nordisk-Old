@@ -7,9 +7,9 @@ use Illuminate\Database\Eloquent\Model;
 class ArpProjection extends Model
 {
     protected $fillable = [
-        'projection_name',
-        'projection_description',
-        'projection_file',
+        'name',
+        'description',
+        'file',
         'data',
     ];
 }

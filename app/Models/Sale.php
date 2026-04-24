@@ -9,7 +9,7 @@ class Sale extends Model
 {
     //
     protected $fillable = [
-        'doc_name',
+        'name',
     ];
 
     public static function ncEscalas($idSale)
@@ -47,10 +47,10 @@ class Sale extends Model
             ->sum('sale_details.bill_real_qty');
 */
         $app = DB::table('sale_details')
-            ->join('products', 'products.prod_sap_code', '=', 'sale_details.prod_sap_code')
+            ->join('products', 'products.sap_code', '=', 'sale_details.prod_sap_code')
             ->join('brands', 'brands.id', '=', 'products.brand_id')
             // ->join('payment_terms', 'payment_terms.id', '=', 'negotiation_details.id_payterm')
-            ->join('clients', 'clients.client_sap_code', '=', 'sale_details.client_sap_code')
+            ->join('clients', 'clients.sap_code', '=', 'sale_details.client_sap_code')
             ->leftJoin('negotiation_details', function ($join) {
                 $join->on('negotiation_details.product_id', '=', 'products.id');
                 $join->on('negotiation_details.client_id', '=', 'clients.id');
@@ -71,10 +71,10 @@ class Sale extends Model
             ->select(
                 // 'users.nickname',
                 'sale_details.client_sap_code',
-                'clients.client_name',
-                /* 'brands.brand_name', */
+                'clients.name',
+                /* 'brands.name', */
                 'sale_details.prod_sap_code',
-                'products.prod_name',
+                'products.name',
                 DB::raw('SUM(sale_details.bill_real_qty) as total'),
                 DB::raw('SUM(sale_details.bill_price) as price'),
                 DB::raw('SUM(sale_details.bill_net_value) as net'),
@@ -89,15 +89,15 @@ class Sale extends Model
             ->where('is_valid', '=', 1)*/
             ->groupBy(
                 'sale_details.client_sap_code',
-                'clients.client_name',
+                'clients.name',
                 'sale_details.prod_sap_code',
-                /* 'brands.brand_name' */
-                'products.prod_name'
+                /* 'brands.name' */
+                'products.name'
                 // 'users.nickname',
             )
-            // ->orderBy('clients.client_name', 'ASC')
-            /*->groupBy('products.prod_name','clients.client_sap_code','clients.client_name',
-            'brands.brand_name','sale_details.bill_price','sale_details.bill_net_value',
+            // ->orderBy('clients.name', 'ASC')
+            /*->groupBy('products.name','clients.client_sap_code','clients.name',
+            'brands.name','sale_details.bill_price','sale_details.bill_net_value',
             'negotiation_details.id','sale_details.bill_number')*/
             // ->distinct()
             ->get();

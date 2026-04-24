@@ -29,7 +29,7 @@ class BrandResource extends Resource
 
     protected static ?string $navigationLabel = 'Marcas ✓';
 
-    protected static ?string $recordTitleAttribute = 'brand_name';
+    protected static ?string $recordTitleAttribute = 'name';
 
     public static function form(Schema $schema): Schema
     {

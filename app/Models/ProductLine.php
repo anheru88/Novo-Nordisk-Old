@@ -14,7 +14,7 @@ class ProductLine extends Model
      * @var array
      */
     protected $fillable = [
-        'line_name',
+        'name',
     ];
 
     public function products()

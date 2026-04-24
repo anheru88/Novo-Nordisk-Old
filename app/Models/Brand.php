@@ -12,7 +12,7 @@ class Brand extends Model
      * @var array
      */
     protected $fillable = [
-        'brand_name',
+        'name',
     ];
 
     /* public function cliente_channel()

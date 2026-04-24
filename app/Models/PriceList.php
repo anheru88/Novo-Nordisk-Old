@@ -13,10 +13,10 @@ class PriceList extends Model
      */
     protected $fillable = [
         'authorizer_user_id',
-        'list_version',
+        'version',
         'active',
         'comments',
-        'list_name',
+        'name',
     ];
 
     public function productAuthLevels()

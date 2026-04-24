@@ -14,8 +14,8 @@ class QuotationDoc extends Model
      */
     protected $fillable = [
         'quotation_id',
-        'doc_name',
-        'file_folder',
+        'name',
+        'folder',
     ];
 
     // Upload and relation QuotationxFiles
@@ -27,8 +27,8 @@ class QuotationDoc extends Model
             $fileName = $file->getClientOriginalName();
             $fileReg = new QuotationDoc;
             $fileReg->quotation_id = $folder;
-            $fileReg->file_folder = '/uploads/quotations/'.$folder;
-            $fileReg->doc_name = $fileName;
+            $fileReg->folder = '/uploads/quotations/'.$folder;
+            $fileReg->name = $fileName;
             if ($fileReg->save()) {
                 $file->move($path, $fileName);
             }

@@ -14,6 +14,6 @@ class AdditionalTerm extends Model
      * @var array
      */
     protected $fillable = [
-        'use_name',
+        'name',
     ];
 }

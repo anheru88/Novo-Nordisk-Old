@@ -14,7 +14,7 @@ class BrandsTable
     {
         return $table
             ->columns([
-                TextColumn::make('brand_name')
+                TextColumn::make('name')
                     ->label('Nombre')
                     ->searchable()
                     ->sortable(),
@@ -29,7 +29,7 @@ class BrandsTable
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
-            ->defaultSort('brand_name')
+            ->defaultSort('name')
             ->filters([
                 //
             ])

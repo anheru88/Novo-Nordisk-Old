@@ -14,8 +14,8 @@ class FolderRepository extends Model
      * @var array
      */
     protected $fillable = [
-        'folder_name',
-        'folder_url',
+        'name',
+        'url',
         'id_parent',
     ];
 

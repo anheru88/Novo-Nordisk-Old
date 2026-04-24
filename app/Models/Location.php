@@ -15,18 +15,18 @@ class Location extends Model
      * @var array
      */
     protected $fillable = [
-        'loc_codedep',
-        'loc_name',
-        'loc_codecity',
+        'codedep',
+        'name',
+        'codecity',
     ];
 
     public static function getCities($id_department)
     {
         $codedep = Location::where('id', $id_department)->first();
         $dep = \DB::table('locations')
-            ->select('loc_codedep', 'loc_name', 'id')
-            ->where('loc_codecity', '=', $codedep->loc_codedep)
-            ->orderBy('loc_name', 'ASC')
+            ->select('codedep', 'name', 'id')
+            ->where('codecity', '=', $codedep->codedep)
+            ->orderBy('name', 'ASC')
             ->get();
 
         // dd($dep);
@@ -37,9 +37,9 @@ class Location extends Model
     public static function getDepartments()
     {
         $dep = \DB::table('locations')
-            ->select('loc_codedep', 'loc_name', 'id')
-            ->where('loc_codecity', '=', 0)
-            ->orderBy('loc_name', 'ASC')
+            ->select('codedep', 'name', 'id')
+            ->where('codecity', '=', 0)
+            ->orderBy('name', 'ASC')
             ->get();
 
         return $dep;

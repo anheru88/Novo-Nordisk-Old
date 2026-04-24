@@ -17,11 +17,11 @@ class ProductPrice extends Model
         'prod_sap_code',
         'v_institutional_price',
         'v_commercial_price',
-        'prod_increment_max',
+        'increment_max',
         'version',
         'active',
-        'prod_valid_date_ini',
-        'prod_valid_date_end',
+        'valid_date_ini',
+        'valid_date_end',
         'comments',
     ];
 

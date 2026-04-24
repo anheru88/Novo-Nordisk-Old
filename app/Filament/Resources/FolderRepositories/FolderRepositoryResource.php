@@ -27,11 +27,11 @@ class FolderRepositoryResource extends Resource
 
     protected static ?string $pluralModelLabel = 'Docs Genéricos';
 
-    protected static ?string $recordTitleAttribute = 'folder_name';
+    protected static ?string $recordTitleAttribute = 'name';
 
     public static function getGloballySearchableAttributes(): array
     {
-        return ['folder_name'];
+        return ['name'];
     }
 
     public static function form(Schema $schema): Schema

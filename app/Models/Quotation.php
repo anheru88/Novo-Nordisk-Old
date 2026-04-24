@@ -19,15 +19,15 @@ class Quotation extends Model
         'is_authorized',
         'authorizer_user_id',
         'channel_id',
-        'quota_value',
-        'quota_date_ini',
-        'quota_date_end',
+        'value',
+        'date_ini',
+        'date_end',
         'created_by',
         'id_auth_level',
         'pre_aproved',
         'comments',
-        'quota_number',
-        'quota_consecutive',
+        'number',
+        'consecutive',
         'comments_auth',
         'comments_pre',
         'status_id',
@@ -35,12 +35,12 @@ class Quotation extends Model
 
     public $sortable = [
         'id',
-        'quota_consecutive',
+        'consecutive',
         'client_id',
         'channel_id',
         'created_by',
-        'quota_date_ini',
-        'quota_date_end',
+        'date_ini',
+        'date_end',
         'status_id',
     ];
 
@@ -50,7 +50,7 @@ class Quotation extends Model
         $date = Carbon::yesterday();
         $yesterday = $date->toDateTimeString();
 
-        Quotation::where('quota_date_end', '<', $yesterday)
+        Quotation::where('date_end', '<', $yesterday)
             ->where(function ($query) {
                 return $query
                     ->where('is_authorized', '<', 7)
@@ -96,8 +96,8 @@ class Quotation extends Model
 
         $quotation = Quotation::where('id', $id)->with('quotadetails', 'cliente')->first();
         $idClient = $quotation->cliente->id;
-        $dateIni = $quotation->quota_date_ini;
-        $dateEnd = $quotation->quota_date_end;
+        $dateIni = $quotation->date_ini;
+        $dateEnd = $quotation->date_end;
         if ($status == 6) {
             foreach ($quotation->quotadetails as $key => $product) {
                 if ($dateIni == $today) {
@@ -105,17 +105,17 @@ class Quotation extends Model
                         ->whereHas('quotation', function ($query) use ($dateIni, $status, $today) {
                             return $query
                                 ->where('status_id', $status)
-                                ->whereDate('quota_date_ini', '<=', $today)
-                                ->whereDate('quota_date_end', '>=', $today)
-                                ->whereDate('quota_date_ini', '<=', $dateIni)
-                                ->whereDate('quota_date_end', '>=', $dateIni);
-                            /*->orWhereDate('quota_date_ini', $dateIni)
-                        ->where('quota_date_ini',  $dateEnd)
-                        ->orWhere('quota_date_end',  $dateIni)
-                        ->orWhere('quota_date_ini',  $dateEnd)
-                        ->orWhere('quota_date_end',  $dateEnd)
-                        ->orWhereBetween('quota_date_ini', [$dateIni, $dateEnd])
-                        ->orWhereBetween('quota_date_end', [$dateIni, $dateEnd]);*/
+                                ->whereDate('date_ini', '<=', $today)
+                                ->whereDate('date_end', '>=', $today)
+                                ->whereDate('date_ini', '<=', $dateIni)
+                                ->whereDate('date_end', '>=', $dateIni);
+                            /*->orWhereDate('date_ini', $dateIni)
+                        ->where('date_ini',  $dateEnd)
+                        ->orWhere('date_end',  $dateIni)
+                        ->orWhere('date_ini',  $dateEnd)
+                        ->orWhere('date_end',  $dateEnd)
+                        ->orWhereBetween('date_ini', [$dateIni, $dateEnd])
+                        ->orWhereBetween('date_end', [$dateIni, $dateEnd]);*/
                         })
                         ->where('quotation_id', '!=', $id)
                         ->whereIn('is_valid', [1, 6])
@@ -126,12 +126,12 @@ class Quotation extends Model
                         ->whereHas('quotation', function ($query) use ($dateIni, $dateEnd, $status) {
                             return $query
                                 ->where('status_id', $status)
-                                ->where('quota_date_ini', $dateIni)
-                                ->orWhere('quota_date_end', $dateIni)
-                                ->orWhere('quota_date_ini', $dateEnd)
-                                ->orWhere('quota_date_end', $dateEnd);
-                            /*->orWhereBetween('quota_date_ini', [$dateIni, $dateEnd])
-                        ->orWhereBetween('quota_date_end', [$dateIni, $dateEnd]);*/
+                                ->where('date_ini', $dateIni)
+                                ->orWhere('date_end', $dateIni)
+                                ->orWhere('date_ini', $dateEnd)
+                                ->orWhere('date_end', $dateEnd);
+                            /*->orWhereBetween('date_ini', [$dateIni, $dateEnd])
+                        ->orWhereBetween('date_end', [$dateIni, $dateEnd]);*/
                         })
                         ->where('quotation_id', '!=', $id)
                         ->whereIn('is_valid', [1, 6])

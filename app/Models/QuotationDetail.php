@@ -33,8 +33,8 @@ class QuotationDetail extends Model
     {
         $app = \DB::table('quotation_details')
             ->select('quotation_details.id', 'quotation_details.product_id', 'quotation_details.payterm_id', 'quotation_details.quantity', 'quotation_details.time_discount',
-                'quotation_details.pay_discount', 'quotation_details.price_uminima', 'quotation_details.totalValue', 'quotation_details.prod_auth_level_id', 'quotation_details.is_valid', 'products.prod_name',
-                'products.v_institutional_price', 'products.v_commercial_price', 'payment_terms.payterm_name')
+                'quotation_details.pay_discount', 'quotation_details.price_uminima', 'quotation_details.totalValue', 'quotation_details.prod_auth_level_id', 'quotation_details.is_valid', 'products.name',
+                'products.v_institutional_price', 'products.v_commercial_price', 'payment_terms.name')
             ->join('products', 'products.id', '=', 'quotation_details.product_id')
             ->join('payment_terms', 'payment_terms.id', '=', 'quotation_details.payterm_id')
             ->where('quotation_id', '=', $id_quota)
@@ -60,10 +60,10 @@ class QuotationDetail extends Model
                 'quotation_details.totalValue',
                 'quotation_details.prod_auth_level_id',
                 'quotation_details.is_valid',
-                'products.prod_name',
+                'products.name',
                 'products.v_institutional_price',
                 'products.v_commercial_price',
-                'payment_terms.payterm_name'
+                'payment_terms.name'
             )
             ->join('products', 'products.id', '=', 'quotation_details.product_id')
             ->join('payment_terms', 'payment_terms.id', '=', 'quotation_details.payterm_id')
@@ -73,7 +73,7 @@ class QuotationDetail extends Model
                 $query->where('quotation_details.is_valid', '=', 6)
                     ->orWhere('quotation_details.is_valid', '=', 1);
             })
-            ->orderBy('products.prod_name', 'ASC')
+            ->orderBy('products.name', 'ASC')
             ->distinct()
             ->get(['quotation_details.product_id']);
 

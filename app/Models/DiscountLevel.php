@@ -12,7 +12,7 @@ class DiscountLevel extends Model
      * @var array
      */
     protected $fillable = [
-        'disc_level_name',
+        'name',
     ];
 
     public function productAuthLevels()
