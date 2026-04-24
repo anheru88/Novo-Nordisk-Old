@@ -117,9 +117,6 @@ class AdminPanelProvider extends PanelProvider
             ['Formatos de documentos',     'Configuración',      Heroicon::OutlinedDocumentDuplicate,  null,                 50, false],
             ['ARP',                        'Configuración',      Heroicon::OutlinedCube,               'arp.index',          60, false],
 
-            // Datos del sistema
-            ['Tipos de cliente',           'Datos del sistema',  Heroicon::OutlinedTag,                null,                 10, false],
-
             // Informes
             ['Reportes',                   'Informes',           Heroicon::OutlinedChartPie,           'reportes.index',     10, false],
             ['Notas',                      'Informes',           Heroicon::OutlinedDocumentMinus,      'reportes.creditnotes', 20, false],
