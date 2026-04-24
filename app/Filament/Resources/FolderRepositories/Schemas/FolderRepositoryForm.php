@@ -30,7 +30,7 @@ class FolderRepositoryForm
                     ->options(fn (?FolderRepository $record) => FolderRepository::query()
                         ->when($record, fn ($q) => $q->whereKeyNot($record->getKey()))
                         ->orderBy('folder_name')
-                        ->pluck('folder_name', 'id_folder'))
+                        ->pluck('folder_name', 'id'))
                     ->searchable()
                     ->placeholder('Raíz')
                     ->default(0)

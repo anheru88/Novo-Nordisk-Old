@@ -12,7 +12,6 @@ use BackedEnum;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
-use UnitEnum;
 
 class FolderRepositoryResource extends Resource
 {
@@ -20,13 +19,13 @@ class FolderRepositoryResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedFolderOpen;
 
-    protected static string|UnitEnum|null $navigationGroup = 'Documentos';
+    protected static bool $shouldRegisterNavigation = false;
 
-    protected static ?int $navigationSort = 10;
+    protected static ?string $slug = 'documentos/folder-repositories';
 
     protected static ?string $modelLabel = 'Carpeta';
 
-    protected static ?string $pluralModelLabel = 'Repositorio de documentos';
+    protected static ?string $pluralModelLabel = 'Docs Genéricos';
 
     protected static ?string $recordTitleAttribute = 'folder_name';
 
