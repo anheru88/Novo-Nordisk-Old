@@ -121,7 +121,6 @@ class AdminPanelProvider extends PanelProvider
             ['Tipos de cliente',           'Datos del sistema',  Heroicon::OutlinedTag,                null,                 10, false],
             ['Métodos de pago',            'Datos del sistema',  Heroicon::OutlinedCreditCard,         null,                 20, false],
             ['Líneas de producto',         'Datos del sistema',  Heroicon::OutlinedSquares2x2,         null,                 30, false],
-            ['Unidades de venta',          'Datos del sistema',  Heroicon::OutlinedScale,              null,                 40, false],
 
             // Informes
             ['Reportes',                   'Informes',           Heroicon::OutlinedChartPie,           'reportes.index',     10, false],
