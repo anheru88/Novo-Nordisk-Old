@@ -7,6 +7,7 @@ use App\Filament\Resources\Products\Schemas\ProductForm;
 use App\Filament\Resources\Products\Tables\ProductsTable;
 use App\Models\Product;
 use BackedEnum;
+use Filament\Navigation\NavigationItem;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
@@ -27,7 +28,7 @@ class ProductResource extends Resource
 
     protected static ?string $pluralModelLabel = 'Productos';
 
-    protected static ?string $navigationLabel = 'Productos ✓';
+    protected static ?string $navigationLabel = 'Productos ⚠';
 
     protected static ?string $recordTitleAttribute = 'name';
 
@@ -44,6 +45,17 @@ class ProductResource extends Resource
     public static function getNavigationBadge(): ?string
     {
         return (string) Product::query()->count();
+    }
+
+    /**
+     * @return array<NavigationItem>
+     */
+    public static function getNavigationItems(): array
+    {
+        return array_map(
+            fn (NavigationItem $item): NavigationItem => $item->extraAttributes(['class' => 'fi-sidebar-item-warning']),
+            parent::getNavigationItems(),
+        );
     }
 
     public static function getRelations(): array

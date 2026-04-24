@@ -58,6 +58,8 @@ class AdminPanelProvider extends PanelProvider
                     '<style>'
                     .'.fi-sidebar-item-blocked .fi-sidebar-item-btn,'
                     .'.fi-sidebar-item-blocked .fi-sidebar-item-btn:hover{color:#dc2626;}'
+                    .'.fi-sidebar-item-warning .fi-sidebar-item-btn,'
+                    .'.fi-sidebar-item-warning .fi-sidebar-item-btn:hover{color:#d97706;}'
                     .'</style>'
                 ),
             )
