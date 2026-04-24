@@ -112,7 +112,6 @@ class AdminPanelProvider extends PanelProvider
 
             // Configuración
             ['Clientes',                   'Configuración',      Heroicon::OutlinedBuildingOffice2,    'clients.index',      10, false, false],
-            ['Productos',                  'Configuración',      Heroicon::OutlinedBeaker,             'products.index',     20, false, false],
             ['Precios',                    'Configuración',      Heroicon::OutlinedBanknotes,          'prices.index',       30, false, false],
             ['Escalas',                    'Configuración',      Heroicon::OutlinedChartBar,           null,                 40, false, false],
             ['Formatos de documentos',     'Configuración',      Heroicon::OutlinedDocumentDuplicate,  null,                 50, false, true],
