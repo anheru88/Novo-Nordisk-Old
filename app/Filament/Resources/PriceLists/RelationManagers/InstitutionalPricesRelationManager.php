@@ -39,37 +39,72 @@ class InstitutionalPricesRelationManager extends RelationManager
                     ->sortable(),
                 TextColumn::make('increment_max')
                     ->label('Precio Máximo')
-                    ->money('COP', 0),
+                    ->formatStateUsing(fn (?string $state): string => static::formatMax($state)),
                 TextColumn::make('discount_n2')
                     ->label('Descuento Nivel 2')
-                    ->state(fn (ProductPrice $r): ?string => $this->discountFor($r, 2)),
+                    ->state(fn (ProductPrice $r): string => $this->discountPrice($r, 2))
+                    ->description(fn (ProductPrice $r): ?string => $this->discountPercent($r, 2)),
                 TextColumn::make('discount_n3')
                     ->label('Descuento Nivel 3')
-                    ->state(fn (ProductPrice $r): ?string => $this->discountFor($r, 3)),
+                    ->state(fn (ProductPrice $r): string => $this->discountPrice($r, 3))
+                    ->description(fn (ProductPrice $r): ?string => $this->discountPercent($r, 3)),
                 TextColumn::make('discount_n4')
                     ->label('Descuento Nivel 4')
-                    ->state(fn (ProductPrice $r): ?string => $this->discountFor($r, 4)),
+                    ->state(fn (ProductPrice $r): string => $this->discountPrice($r, 4))
+                    ->description(fn (ProductPrice $r): ?string => $this->discountPercent($r, 4)),
                 TextColumn::make('valid_date_ini')
                     ->label('Vigencia desde')
-                    ->date('Y-m-d'),
+                    ->date('d-m-Y'),
                 TextColumn::make('valid_date_end')
                     ->label('Vigencia hasta')
-                    ->date('Y-m-d'),
+                    ->date('d-m-Y'),
             ])
             ->headerActions([])
             ->recordActions([])
             ->toolbarActions([]);
     }
 
-    protected function discountFor(ProductPrice $record, int $level): ?string
+    protected function discountPrice(ProductPrice $record, int $level): string
     {
-        $levels = $this->levels($record->pricelists_id);
+        $row = $this->levelRow($record, $level);
+        $price = $row?->discount_price;
 
-        $row = $levels->firstWhere(fn (ProductAuthLevel $l) => $l->product_id === $record->product_id
-            && $l->dist_channel_id === static::CHANNEL_ID
-            && $l->level_discount_id === $level);
+        if ($price === null || ! is_numeric($price)) {
+            return '—';
+        }
 
-        return $row?->discount_value;
+        return '$'.number_format((float) $price, 0, ',', '.');
+    }
+
+    protected function discountPercent(ProductPrice $record, int $level): ?string
+    {
+        $row = $this->levelRow($record, $level);
+        $value = $row?->discount_value;
+
+        if ($value === null || $value === '') {
+            return null;
+        }
+
+        return is_numeric($value) ? $value.'%' : $value;
+    }
+
+    protected function levelRow(ProductPrice $record, int $level): ?ProductAuthLevel
+    {
+        return $this->levels($record->pricelists_id)
+            ->firstWhere(fn (ProductAuthLevel $l) => $l->product_id === $record->product_id
+                && $l->dist_channel_id === static::CHANNEL_ID
+                && $l->level_discount_id === $level);
+    }
+
+    protected static function formatMax(?string $state): string
+    {
+        if ($state === null || $state === '' || strcasecmp($state, 'N/A') === 0) {
+            return 'N/A';
+        }
+
+        return is_numeric($state)
+            ? '$'.number_format((float) $state, 0, ',', '.')
+            : $state;
     }
 
     protected function levels(int $pricelistId): Collection
