@@ -7,14 +7,17 @@ use Database\Seeders\LocalSeeders\BrandSeeder;
 use Database\Seeders\LocalSeeders\ClientFilesSeeder;
 use Database\Seeders\LocalSeeders\ClientSeeder;
 use Database\Seeders\LocalSeeders\ClientTypeSeeder;
+use Database\Seeders\LocalSeeders\DiscountLevelSeeder;
 use Database\Seeders\LocalSeeders\DistChannelSeeder;
 use Database\Seeders\LocalSeeders\DocumentsSeeder;
 use Database\Seeders\LocalSeeders\LocationSeeder;
 use Database\Seeders\LocalSeeders\NegotiationConceptSeeder;
 use Database\Seeders\LocalSeeders\PaymentTermSeeder;
 use Database\Seeders\LocalSeeders\PriceListSeeder;
+use Database\Seeders\LocalSeeders\ProductAuthLevelSeeder;
 use Database\Seeders\LocalSeeders\ProductLineSeeder;
 use Database\Seeders\LocalSeeders\ProductMeasureUnitSeeder;
+use Database\Seeders\LocalSeeders\ProductPriceSeeder;
 use Database\Seeders\LocalSeeders\ProductSeeder;
 use Database\Seeders\LocalSeeders\UserSeeder;
 use Illuminate\Database\Seeder;
@@ -37,6 +40,9 @@ class TestsSeeder extends Seeder
         $this->call(ClientSeeder::class);
         $this->call(ClientFilesSeeder::class);
         $this->call(ProductSeeder::class);
+        $this->call(DiscountLevelSeeder::class);
         $this->call(PriceListSeeder::class);
+        $this->call(ProductPriceSeeder::class);
+        $this->call(ProductAuthLevelSeeder::class);
     }
 }

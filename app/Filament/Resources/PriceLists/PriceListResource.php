@@ -3,7 +3,11 @@
 namespace App\Filament\Resources\PriceLists;
 
 use App\Filament\Resources\PriceLists\Pages\ListPriceLists;
+use App\Filament\Resources\PriceLists\Pages\ViewPriceList;
+use App\Filament\Resources\PriceLists\RelationManagers\CommercialPricesRelationManager;
+use App\Filament\Resources\PriceLists\RelationManagers\InstitutionalPricesRelationManager;
 use App\Filament\Resources\PriceLists\Schemas\PriceListForm;
+use App\Filament\Resources\PriceLists\Schemas\PriceListInfolist;
 use App\Filament\Resources\PriceLists\Tables\PriceListsTable;
 use App\Models\PriceList;
 use BackedEnum;
@@ -37,6 +41,11 @@ class PriceListResource extends Resource
         return PriceListForm::configure($schema);
     }
 
+    public static function infolist(Schema $schema): Schema
+    {
+        return PriceListInfolist::configure($schema);
+    }
+
     public static function table(Table $table): Table
     {
         return PriceListsTable::configure($table);
@@ -61,7 +70,8 @@ class PriceListResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            InstitutionalPricesRelationManager::class,
+            CommercialPricesRelationManager::class,
         ];
     }
 
@@ -69,6 +79,7 @@ class PriceListResource extends Resource
     {
         return [
             'index' => ListPriceLists::route('/'),
+            'view' => ViewPriceList::route('/{record}'),
         ];
     }
 }

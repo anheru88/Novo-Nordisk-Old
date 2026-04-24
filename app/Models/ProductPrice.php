@@ -34,4 +34,10 @@ class ProductPrice extends Model
     {
         return $this->belongsTo(Product::class, 'product_id', 'id');
     }
+
+    public function authLevels()
+    {
+        return $this->hasMany(ProductAuthLevel::class, 'product_id', 'product_id')
+            ->where('pricelists_id', $this->pricelists_id);
+    }
 }

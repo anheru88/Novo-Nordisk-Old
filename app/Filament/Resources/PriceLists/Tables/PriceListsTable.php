@@ -2,9 +2,12 @@
 
 namespace App\Filament\Resources\PriceLists\Tables;
 
+use App\Filament\Resources\PriceLists\PriceListResource;
+use App\Models\PriceList;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
+use Filament\Actions\ViewAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
@@ -18,7 +21,8 @@ class PriceListsTable
                     ->label('Nombre de lista')
                     ->searchable()
                     ->sortable()
-                    ->wrap(),
+                    ->wrap()
+                    ->url(fn (PriceList $record): string => PriceListResource::getUrl('view', ['record' => $record])),
                 TextColumn::make('created_at')
                     ->label('Subida el')
                     ->dateTime('Y-m-d H:i')
@@ -50,6 +54,7 @@ class PriceListsTable
                 //
             ])
             ->recordActions([
+                ViewAction::make(),
                 EditAction::make(),
             ])
             ->toolbarActions([
