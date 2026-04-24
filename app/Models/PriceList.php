@@ -19,6 +19,11 @@ class PriceList extends Model
         'name',
     ];
 
+    public function authorizer()
+    {
+        return $this->belongsTo(User::class, 'authorizer_user_id', 'id');
+    }
+
     public function productAuthLevels()
     {
         return $this->hasMany(ProductAuthLevel::class, 'pricelists_id', 'id');

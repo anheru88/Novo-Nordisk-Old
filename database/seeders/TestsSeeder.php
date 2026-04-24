@@ -12,6 +12,7 @@ use Database\Seeders\LocalSeeders\DocumentsSeeder;
 use Database\Seeders\LocalSeeders\LocationSeeder;
 use Database\Seeders\LocalSeeders\NegotiationConceptSeeder;
 use Database\Seeders\LocalSeeders\PaymentTermSeeder;
+use Database\Seeders\LocalSeeders\PriceListSeeder;
 use Database\Seeders\LocalSeeders\ProductLineSeeder;
 use Database\Seeders\LocalSeeders\ProductMeasureUnitSeeder;
 use Database\Seeders\LocalSeeders\ProductSeeder;
@@ -36,5 +37,6 @@ class TestsSeeder extends Seeder
         $this->call(ClientSeeder::class);
         $this->call(ClientFilesSeeder::class);
         $this->call(ProductSeeder::class);
+        $this->call(PriceListSeeder::class);
     }
 }
