@@ -77,6 +77,11 @@ class Product extends Model
         return $this->belongsTo(ProductLine::class, 'prod_line_id', 'id');
     }
 
+    public function brand()
+    {
+        return $this->belongsTo(Brand::class, 'brand_id', 'id');
+    }
+
     public function productxclientxscales()
     {
         return $this->hasMany(ProductClientScale::class, 'product_id', 'id');
