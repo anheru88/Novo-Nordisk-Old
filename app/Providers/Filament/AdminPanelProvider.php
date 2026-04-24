@@ -118,7 +118,7 @@ class AdminPanelProvider extends PanelProvider
             // Operaciones
             ['Cotizaciones',               'Operaciones',        Heroicon::OutlinedDocumentText,       'quotations.index',   10, false, false],
             ['Negociaciones',              'Operaciones',        Heroicon::OutlinedBriefcase,          'negotiations.index', 20, false, false],
-            ['Simulador ARP',              'Operaciones',        Heroicon::OutlinedCalculator,         'arp.simulations',    30, false, false],
+            ['Simulador ARP',              'Operaciones',        Heroicon::OutlinedCalculator,         'arp.simulations',    30, false, true],
 
             // Configuración
             ['Clientes',                   'Configuración',      Heroicon::OutlinedBuildingOffice2,    'clients.index',      10, false, false],
