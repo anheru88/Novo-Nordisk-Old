@@ -32,9 +32,7 @@ class ProductsTable
                     ->sortable(),
                 TextColumn::make('package')
                     ->label('Presentación')
-                    ->wrap()
-                    ->limit(80)
-                    ->tooltip(fn (Product $record): ?string => $record->package),
+                    ->wrap(),
                 IconColumn::make('is_current')
                     ->label('Vigente')
                     ->boolean()
