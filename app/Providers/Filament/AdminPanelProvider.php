@@ -15,6 +15,7 @@ use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
 use Filament\Support\Icons\Heroicon;
+use Filament\View\PanelsRenderHook;
 use Filament\Widgets\AccountWidget;
 use Filament\Widgets\FilamentInfoWidget;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
@@ -51,6 +52,15 @@ class AdminPanelProvider extends PanelProvider
                 'Documentos',
             ])
             ->navigationItems($this->placeholderNavigationItems())
+            ->renderHook(
+                PanelsRenderHook::STYLES_AFTER,
+                fn (): HtmlString => new HtmlString(
+                    '<style>'
+                    .'.fi-sidebar-item-blocked .fi-sidebar-item-btn,'
+                    .'.fi-sidebar-item-blocked .fi-sidebar-item-btn:hover{color:#dc2626;}'
+                    .'</style>'
+                ),
+            )
             ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\Filament\Widgets')
             ->widgets([
                 AccountWidget::class,
@@ -125,17 +135,23 @@ class AdminPanelProvider extends PanelProvider
 
         return array_map(function (array $i) {
             $label = match (true) {
-                $i[6] ?? false => new HtmlString('<span style="color:#dc2626;">'.e($i[0]).' ✗</span>'),
+                $i[6] ?? false => $i[0].' ✗',
                 $i[5] => $i[0].' ✓',
                 default => $i[0],
             };
 
-            return NavigationItem::make($label)
+            $item = NavigationItem::make($label)
                 ->group($i[1])
                 ->icon($i[2])
                 ->url(fn () => '#')
                 ->visible(fn () => $i[3] === null || auth()->user()?->can($i[3]))
                 ->sort($i[4]);
+
+            if ($i[6] ?? false) {
+                $item->extraAttributes(['class' => 'fi-sidebar-item-blocked']);
+            }
+
+            return $item;
         }, $items);
     }
 }
