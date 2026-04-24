@@ -6,8 +6,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class ArpDiscount extends Model
 {
-    protected $primaryKey = 'id_discount';
-
     protected $fillable = [
         'discount_name',
         'discount_percentage',

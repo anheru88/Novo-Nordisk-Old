@@ -8,8 +8,6 @@ class ArpSalesList extends Model
 {
     protected $table = 'arp_sales_list';
 
-    protected $primaryKey = 'id_sales_list';
-
     protected $fillable = [
         'active',
     ];

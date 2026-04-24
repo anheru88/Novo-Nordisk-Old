@@ -6,20 +6,17 @@ use Illuminate\Database\Eloquent\Model;
 
 class ProductMeasureUnit extends Model
 {
-    protected $primaryKey = 'id_unit';
-
     protected $fillable = [
         'unit_name',
     ];
 
-    
     public function productScalesLevel()
     {
-        return $this->hasMany(ProductScaleLevel::class, 'id_measure_unit', 'id_unit');
+        return $this->hasMany(ProductScaleLevel::class, 'measure_unit_id', 'id');
     }
 
     public function products()
     {
-        return $this->hasMany(Product::class, 'id_measure_unit', 'id_unit');
+        return $this->hasMany(Product::class, 'measure_unit_id', 'id');
     }
 }

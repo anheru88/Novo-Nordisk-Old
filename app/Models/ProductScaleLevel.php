@@ -6,9 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class ProductScaleLevel extends Model
 {
-    //Tabla a negociar
-
-    protected $primaryKey = 'id_scale_level';
+    // Tabla a negociar
 
     /**
      * Los atributos que son asignados en masa
@@ -16,22 +14,21 @@ class ProductScaleLevel extends Model
      * @var array
      */
     protected $fillable = [
-        'id_scale',
+        'scale_id',
         'scale_discount',
         'scale_min',
         'scale_max',
         'version',
-        'id_measure_unit',
+        'measure_unit_id',
     ];
 
-    
     public function measureUnit()
     {
-        return $this->belongsTo(ProductMeasureUnit::class, 'id_measure_unit', 'id_unit');
+        return $this->belongsTo(ProductMeasureUnit::class, 'measure_unit_id', 'id');
     }
 
     public function scale()
     {
-        return $this->belongsTo(ProductScale::class, 'id_scale', 'id_scale');
+        return $this->belongsTo(ProductScale::class, 'scale_id', 'id');
     }
 }

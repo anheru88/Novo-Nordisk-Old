@@ -7,24 +7,20 @@ use Illuminate\Database\Eloquent\Model;
 class CreditNoteClientBill extends Model
 {
     //
-    protected $primaryKey = 'id_credit_notes_clients_b';
-
     protected $fillable = [
         'client_sap_code',
         'concept',
         'bill',
-        'id_credit_notes',
+        'credit_notes_id',
     ];
 
-
-    
     public function creditNotes()
     {
-        return $this->belongsTo(CreditNote::class, 'id_credit_notes', 'id_credit_notes');
+        return $this->belongsTo(CreditNote::class, 'credit_notes_id', 'id');
     }
 
     public function creditNotesDetailsB()
     {
-        return $this->hasMany(CreditNoteDetailBill::class, 'id_credit_notes_clients_b', 'id_credit_notes_clients_b');
+        return $this->hasMany(CreditNoteDetailBill::class, 'credit_notes_clients_b_id', 'id');
     }
 }

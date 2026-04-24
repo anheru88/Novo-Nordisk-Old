@@ -6,9 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class ProductHistory extends Model
 {
-    //Tabla a negociar
-
-    protected $primaryKey = 'id_product';
+    // Tabla a negociar
 
     /**
      * Los atributos que son asignados en masa
@@ -16,7 +14,7 @@ class ProductHistory extends Model
      * @var array
      */
     protected $fillable = [
-        'id_product_h',
+        'product_h_id',
         'modification_type',
         'comments',
         'v_institutional_price',
@@ -27,6 +25,6 @@ class ProductHistory extends Model
 
     public function productH()
     {
-        return $this->belongsTo(Product::class, 'id_product_h', 'id_product');
+        return $this->belongsTo(Product::class, 'product_h_id', 'id');
     }
 }

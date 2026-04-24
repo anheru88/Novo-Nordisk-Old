@@ -6,22 +6,19 @@ use Illuminate\Database\Eloquent\Model;
 
 class ProductSapCode extends Model
 {
-    protected $primaryKey = 'id_product_sapcode';
-
     /**
      * Los atributos que son asignados en masa
      *
      * @var array
      */
     protected $fillable = [
-        'id_product',
+        'product_id',
         'active',
         'sap_code',
     ];
 
-    
     public function product()
     {
-        return $this->belongsTo(Product::class, 'id_product', 'id_product');
+        return $this->belongsTo(Product::class, 'product_id', 'id');
     }
 }

@@ -6,9 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class ClientType extends Model
 {
-    //Tabla a negociar
-
-    protected $primaryKey = 'id_type';
+    // Tabla a negociar
 
     /**
      * Los atributos que son asignados en masa
@@ -21,12 +19,11 @@ class ClientType extends Model
 
     /*public function cliente()
     {
-        return $this->belongsTo('App\Client', 'id_client_type', 'id_type');
+        return $this->belongsTo('App\Client', 'client_type_id', 'id');
     }*/
 
-    
     public function clients()
     {
-        return $this->hasMany(Client::class, 'id_client_type', 'id_type');
+        return $this->hasMany(Client::class, 'client_type_id', 'id');
     }
 }

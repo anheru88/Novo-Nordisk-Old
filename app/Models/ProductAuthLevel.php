@@ -6,53 +6,49 @@ use Illuminate\Database\Eloquent\Model;
 
 class ProductAuthLevel extends Model
 {
-    
-    protected $primaryKey = 'id_level';
-
     /**
      * Los atributos que son asignados en masa
      *
      * @var array
      */
     protected $fillable = [
-        'id_product',
-        'id_dist_channel',
-        'id_level_discount',
+        'product_id',
+        'dist_channel_id',
+        'level_discount_id',
         'discount_value',
         'version',
         'active',
-        'id_pricelists',
+        'pricelists_id',
         'discount_price',
     ];
-    
-    
+
     public function distChannel()
     {
-        return $this->belongsTo(DistChannel::class, 'id_dist_channel', 'id_channel');
+        return $this->belongsTo(DistChannel::class, 'dist_channel_id', 'id');
     }
 
     public function levelDiscount()
     {
-        return $this->belongsTo(DiscountLevel::class, 'id_level_discount', 'id_disc_level');
+        return $this->belongsTo(DiscountLevel::class, 'level_discount_id', 'id');
     }
 
     public function pricelists()
     {
-        return $this->belongsTo(PriceList::class, 'id_pricelists', 'id_pricelists');
+        return $this->belongsTo(PriceList::class, 'pricelists_id', 'id');
     }
 
     public function product()
     {
-        return $this->belongsTo(Product::class, 'id_product', 'id_product');
+        return $this->belongsTo(Product::class, 'product_id', 'id');
     }
 
     public function negotiationsDetails()
     {
-        return $this->hasMany(NegotiationDetail::class, 'id_prod_auth_level', 'id_level');
+        return $this->hasMany(NegotiationDetail::class, 'prod_auth_level_id', 'id');
     }
 
     public function quotationsDetails()
     {
-        return $this->hasMany(QuotationDetail::class, 'id_prod_auth_level', 'id_level');
+        return $this->hasMany(QuotationDetail::class, 'prod_auth_level_id', 'id');
     }
 }

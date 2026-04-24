@@ -6,9 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class ClientSapCode extends Model
 {
-    //Tabla a negociar
-
-    protected $primaryKey = 'id_sap_code';
+    // Tabla a negociar
 
     /**
      * Los atributos que son asignados en masa
@@ -16,19 +14,18 @@ class ClientSapCode extends Model
      * @var array
      */
     protected $fillable = [
-        'id_client',
+        'client_id',
         'sap_code',
         'client_sap_code',
     ];
 
     /*public function cliente()
     {
-        return $this->belongsTo('App\Client', 'id_client_type', 'id_type');
+        return $this->belongsTo('App\Client', 'client_type_id', 'id');
     }*/
 
-    
     public function client()
     {
-        return $this->belongsTo(Client::class, 'id_client', 'id_client');
+        return $this->belongsTo(Client::class, 'client_id', 'id');
     }
 }

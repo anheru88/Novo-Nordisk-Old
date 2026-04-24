@@ -6,7 +6,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class ArpSimulationDetail extends Model
 {
-    protected $primaryKey = 'id';
     protected $fillable = [
         'arp_simulation_id',
         'brand_id',
@@ -35,12 +34,12 @@ class ArpSimulationDetail extends Model
         'region',
     ];
 
-    //Relations
+    // Relations
     public function scopeSumDetails($query, $idProduct)
     {
-        $query = ArpSimulationDetail::groupBy('client_id','product_id')
-        ->selectRaw('sum(volume) as volume, sum(amount_mcop) as valuecop, client_id, product_id ')
-        ->where('product_id',$idProduct);
+        $query = ArpSimulationDetail::groupBy('client_id', 'product_id')
+            ->selectRaw('sum(volume) as volume, sum(amount_mcop) as valuecop, client_id, product_id ')
+            ->where('product_id', $idProduct);
 
         return $query->get();
     }
@@ -52,16 +51,16 @@ class ArpSimulationDetail extends Model
 
     public function brand()
     {
-        return $this->belongsTo(Brand::class, 'brand_id', 'id_brand');
+        return $this->belongsTo(Brand::class, 'brand_id', 'id');
     }
 
     public function client()
     {
-        return $this->belongsTo(Client::class, 'client_id', 'id_client');
+        return $this->belongsTo(Client::class, 'client_id', 'id');
     }
 
     public function product()
     {
-        return $this->belongsTo(Product::class, 'product_id', 'id_product');
+        return $this->belongsTo(Product::class, 'product_id', 'id');
     }
 }

@@ -7,21 +7,17 @@ use Illuminate\Database\Eloquent\Model;
 class CreditNote extends Model
 {
     //
-    protected $primaryKey = 'id_credit_notes';
-
     protected $fillable = [
         'doc_name',
     ];
 
-
-    
     public function creditNotesClients()
     {
-        return $this->hasMany(CreditNoteClient::class, 'id_credit_notes', 'id_credit_notes');
+        return $this->hasMany(CreditNoteClient::class, 'credit_notes_id', 'id');
     }
 
     public function creditNotesClientsBills()
     {
-        return $this->hasMany(CreditNoteClientBill::class, 'id_credit_notes', 'id_credit_notes');
+        return $this->hasMany(CreditNoteClientBill::class, 'credit_notes_id', 'id');
     }
 }

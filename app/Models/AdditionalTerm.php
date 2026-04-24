@@ -6,17 +6,14 @@ use Illuminate\Database\Eloquent\Model;
 
 class AdditionalTerm extends Model
 {
-        //Tabla a negociar
+    // Tabla a negociar
 
-        protected $primaryKey = 'id_use';
-    
-        /**
-         * Los atributos que son asignados en masa
-         *
-         * @var array
-         */
-        protected $fillable = [
+    /**
+     * Los atributos que son asignados en masa
+     *
+     * @var array
+     */
+    protected $fillable = [
         'use_name',
     ];
-    
 }

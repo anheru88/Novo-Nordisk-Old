@@ -6,20 +6,16 @@ use Illuminate\Database\Eloquent\Model;
 
 class NegotiationDetail extends Model
 {
-    protected $primaryKey = 'id_negotiation_det';
-
-
-
     /**
      * Los atributos que son asignados en masa
      *
      * @var array
      */
     protected $fillable = [
-        'id_negotiation',
-        'id_client',
-        'id_product',
-        'id_concept',
+        'negotiation_id',
+        'client_id',
+        'product_id',
+        'concept_id',
         'aclaracion',
         'suj_volumen',
         'quantity',
@@ -28,46 +24,42 @@ class NegotiationDetail extends Model
         'discount_type',
         'discount_acum',
         'observations',
-        'id_prod_auth_level',
+        'prod_auth_level_id',
         'authlevel',
         'is_valid',
-        'id_quotation',
-        'id_scale',
+        'quotation_id',
+        'scale_id',
         'id_scale_lvl',
         'visible',
         'warning',
     ];
 
+    // Scope
 
-    //Scope
-
-    public function scopeCheckInformacionConcepto($query, $concepto){
-
-    }
-
+    public function scopeCheckInformacionConcepto($query, $concepto) {}
 
     public function client()
     {
-        return $this->belongsTo(Client::class, 'id_client', 'id_client');
+        return $this->belongsTo(Client::class, 'client_id', 'id');
     }
 
     public function negotiation()
     {
-        return $this->belongsTo(Negotiation::class, 'id_negotiation', 'id_negotiation');
+        return $this->belongsTo(Negotiation::class, 'negotiation_id', 'id');
     }
 
     public function prodAuthLevel()
     {
-        return $this->belongsTo(ProductAuthLevel::class, 'id_prod_auth_level', 'id_level');
+        return $this->belongsTo(ProductAuthLevel::class, 'prod_auth_level_id', 'id');
     }
 
     public function product()
     {
-        return $this->belongsTo(Product::class, 'id_product', 'id_product');
+        return $this->belongsTo(Product::class, 'product_id', 'id');
     }
 
     public function negotiationsErrors()
     {
-        return $this->hasMany(NegotiationError::class, 'id_negotiation_det', 'id_negotiation_det');
+        return $this->hasMany(NegotiationError::class, 'negotiation_det_id', 'id');
     }
 }

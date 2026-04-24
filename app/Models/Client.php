@@ -6,9 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Client extends Model
 {
-    //Tabla a negociar
-
-    protected $primaryKey = 'id_client';
+    // Tabla a negociar
 
     /**
      * Los atributos que son asignados en masa
@@ -16,111 +14,110 @@ class Client extends Model
      * @var array
      */
     protected $fillable = [
-        'id_client_type',
+        'client_type_id',
         'client_name',
         'client_quote_name',
         'client_nit',
         'client_sap_name',
         'client_sap_code',
-        'id_client_channel',
-        'id_department',
-        'id_city',
+        'client_channel_id',
+        'department_id',
+        'city_id',
         'client_contact',
         'client_phone',
         'client_email',
         'client_credit',
-        'id_diab_contact',
-        'id_biof_contact',
+        'diab_contact_id',
+        'biof_contact_id',
         'created_by',
         'client_address',
         'client_position',
         'client_area_code',
         'active',
-        'id_payterm',
+        'payterm_id',
         'client_email_secondary',
     ];
 
+    public static function getClientID($nit)
+    {
+        $client = \DB::table('clients')
+            ->select('id')
+            ->where('client_nit', '=', $nit)
+            ->first('id');
 
-    public static function getClientID($nit){
-        $id_client = \DB::table('clients')
-        ->select('id_client')
-        ->where('client_nit', '=', $nit)
-        ->first('id_client');
-
-        return $id_client->id_client;
+        return $client->id;
     }
 
     public function scopeClientChannel($query, $id)
     {
-        $query = Client::where('id_client', $id)
-        ->with('channel');
-        return $query->first()->channel->id_channel;
+        $query = Client::where('id', $id)
+            ->with('channel');
+
+        return $query->first()->channel->id;
     }
-
-
 
     public function city()
     {
-        return $this->belongsTo(Location::class, 'id_city', 'id_locations');
+        return $this->belongsTo(Location::class, 'city_id', 'id');
     }
 
     public function clientChannel()
     {
-        return $this->belongsTo(DistChannel::class, 'id_client_channel', 'id_channel');
+        return $this->belongsTo(DistChannel::class, 'client_channel_id', 'id');
     }
 
     public function clientType()
     {
-        return $this->belongsTo(ClientType::class, 'id_client_type', 'id_type');
+        return $this->belongsTo(ClientType::class, 'client_type_id', 'id');
     }
 
     public function department()
     {
-        return $this->belongsTo(Location::class, 'id_department', 'id_locations');
+        return $this->belongsTo(Location::class, 'department_id', 'id');
     }
 
     public function payterm()
     {
-        return $this->belongsTo(PaymentTerm::class, 'id_payterm', 'id_payterms');
+        return $this->belongsTo(PaymentTerm::class, 'payterm_id', 'id');
     }
 
     public function productxclientxscales()
     {
-        return $this->hasMany(ProductClientScale::class, 'id_client', 'id_client');
+        return $this->hasMany(ProductClientScale::class, 'client_id', 'id');
     }
 
     public function negotiationsDetails()
     {
-        return $this->hasMany(NegotiationDetail::class, 'id_client', 'id_client');
+        return $this->hasMany(NegotiationDetail::class, 'client_id', 'id');
     }
 
     public function quotations()
     {
-        return $this->hasMany(Quotation::class, 'id_client', 'id_client');
+        return $this->hasMany(Quotation::class, 'client_id', 'id');
     }
 
     public function quotationsDetails()
     {
-        return $this->hasMany(QuotationDetail::class, 'id_client', 'id_client');
+        return $this->hasMany(QuotationDetail::class, 'client_id', 'id');
     }
 
     public function clientsSapCodes()
     {
-        return $this->hasMany(ClientSapCode::class, 'id_client', 'id_client');
+        return $this->hasMany(ClientSapCode::class, 'client_id', 'id');
     }
 
     public function arpSimulationsDetails()
     {
-        return $this->hasMany(ArpSimulationDetail::class, 'client_id', 'id_client');
+        return $this->hasMany(ArpSimulationDetail::class, 'client_id', 'id');
     }
 
     public function negotiations()
     {
-        return $this->hasMany(Negotiation::class, 'id_client', 'id_client');
+        return $this->hasMany(Negotiation::class, 'client_id', 'id');
     }
 
     public function clientsFiles()
     {
-        return $this->hasMany(ClientFile::class, 'id_client', 'id_client');
+        return $this->hasMany(ClientFile::class, 'client_id', 'id');
     }
 }

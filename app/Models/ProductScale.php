@@ -2,32 +2,29 @@
 
 namespace App\Models;
 
-use Illuminate\Broadcasting\Channel;
 use Illuminate\Database\Eloquent\Model;
 
 class ProductScale extends Model
 {
-    //Tabla a negociar
+    // Tabla a negociar
 
-    protected $primaryKey = 'id_scale';
     protected $fillable = [
-        'id_product',
+        'product_id',
         'scale_number',
     ];
 
-    
     public function product()
     {
-        return $this->belongsTo(Product::class, 'id_product', 'id_product');
+        return $this->belongsTo(Product::class, 'product_id', 'id');
     }
 
     public function productxclientxscales()
     {
-        return $this->hasMany(ProductClientScale::class, 'id_scale', 'id_scale');
+        return $this->hasMany(ProductClientScale::class, 'scale_id', 'id');
     }
 
     public function productScalesLevel()
     {
-        return $this->hasMany(ProductScaleLevel::class, 'id_scale', 'id_scale');
+        return $this->hasMany(ProductScaleLevel::class, 'scale_id', 'id');
     }
 }

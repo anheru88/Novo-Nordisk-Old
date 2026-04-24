@@ -6,9 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class ProductLine extends Model
 {
-    //Tabla a negociar
-
-    protected $primaryKey = 'id_line';
+    // Tabla a negociar
 
     /**
      * Los atributos que son asignados en masa
@@ -19,10 +17,8 @@ class ProductLine extends Model
         'line_name',
     ];
 
-    
-    
     public function products()
     {
-        return $this->hasMany(Product::class, 'id_prod_line', 'id_line');
+        return $this->hasMany(Product::class, 'prod_line_id', 'id');
     }
 }

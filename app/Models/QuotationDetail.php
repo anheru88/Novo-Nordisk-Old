@@ -6,109 +6,108 @@ use Illuminate\Database\Eloquent\Model;
 
 class QuotationDetail extends Model
 {
-	
     protected $fillable = [
-        'id_quotation',
-        'id_client',
-        'id_product',
-        'id_payterm',
+        'quotation_id',
+        'client_id',
+        'product_id',
+        'payterm_id',
         'quantity',
         'prod_cost',
         'time_discount',
         'pay_discount',
         'price_uminima',
         'price_discount',
-        'id_prod_auth_level',
+        'prod_auth_level_id',
         'authlevel',
         'is_valid',
     ];
-	protected $primaryKey = 'id_quota_det';
 
-	/**
-	 * Los atributos que son asignados en masa
-	 *
-	 * @var array
-	 */
-	protected $guarded = [ ];
+    /**
+     * Los atributos que son asignados en masa
+     *
+     * @var array
+     */
+    protected $guarded = [];
 
-	public static function getProducts($id_quota)
-	{
-		$app = \DB::table('quotation_details')
-			->select('quotation_details.id_quota_det', 'quotation_details.id_product', 'quotation_details.id_payterm', 'quotation_details.quantity', 'quotation_details.time_discount',
-			'quotation_details.pay_discount', 'quotation_details.price_uminima', 'quotation_details.totalValue', 'quotation_details.id_prod_auth_level', 'quotation_details.is_valid','products.prod_name',
-			'products.v_institutional_price', 'products.v_commercial_price', 'payment_terms.payterm_name')
-			->join('products', 'products.id_product', '=', 'quotation_details.id_product')
-			->join('payment_terms', 'payment_terms.id_payterms', '=', 'quotation_details.id_payterm')
-			->where('id_quotation', '=', $id_quota)
-			->orderBy('id_quota_det')
-			->get();
+    public static function getProducts($id_quota)
+    {
+        $app = \DB::table('quotation_details')
+            ->select('quotation_details.id', 'quotation_details.product_id', 'quotation_details.payterm_id', 'quotation_details.quantity', 'quotation_details.time_discount',
+                'quotation_details.pay_discount', 'quotation_details.price_uminima', 'quotation_details.totalValue', 'quotation_details.prod_auth_level_id', 'quotation_details.is_valid', 'products.prod_name',
+                'products.v_institutional_price', 'products.v_commercial_price', 'payment_terms.payterm_name')
+            ->join('products', 'products.id', '=', 'quotation_details.product_id')
+            ->join('payment_terms', 'payment_terms.id', '=', 'quotation_details.payterm_id')
+            ->where('quotation_id', '=', $id_quota)
+            ->orderBy('id')
+            ->get();
 
-		return $app;
-	}
+        return $app;
+    }
 
-	public static function getProductsAll($id_client)
-	{
-		$app = \DB::table('quotation_details')
-			->select(
-				'quotation_details.id_quota_det',
-				'quotation_details.id_product',
-                'quotation_details.id_quotation',
-				'quotation_details.id_payterm',
-				'quotation_details.quantity',
-				'quotation_details.prod_cost',
-				'quotation_details.time_discount',
-				'quotation_details.pay_discount',
-				'quotation_details.price_uminima',
-				'quotation_details.totalValue',
-				'quotation_details.id_prod_auth_level',
+    public static function getProductsAll($id_client)
+    {
+        $app = \DB::table('quotation_details')
+            ->select(
+                'quotation_details.id',
+                'quotation_details.product_id',
+                'quotation_details.quotation_id',
+                'quotation_details.payterm_id',
+                'quotation_details.quantity',
+                'quotation_details.prod_cost',
+                'quotation_details.time_discount',
+                'quotation_details.pay_discount',
+                'quotation_details.price_uminima',
+                'quotation_details.totalValue',
+                'quotation_details.prod_auth_level_id',
                 'quotation_details.is_valid',
-				'products.prod_name',
-				'products.v_institutional_price',
-				'products.v_commercial_price',
-				'payment_terms.payterm_name'
-			)
-			->join('products', 'products.id_product', '=', 'quotation_details.id_product')
-			->join('payment_terms', 'payment_terms.id_payterms', '=', 'quotation_details.id_payterm')
-			->join('product_scales', 'product_scales.id_product', '=', 'products.id_product')
-			->where('id_client', '=', $id_client)
-            ->where(function($query){
+                'products.prod_name',
+                'products.v_institutional_price',
+                'products.v_commercial_price',
+                'payment_terms.payterm_name'
+            )
+            ->join('products', 'products.id', '=', 'quotation_details.product_id')
+            ->join('payment_terms', 'payment_terms.id', '=', 'quotation_details.payterm_id')
+            ->join('product_scales', 'product_scales.product_id', '=', 'products.id')
+            ->where('client_id', '=', $id_client)
+            ->where(function ($query) {
                 $query->where('quotation_details.is_valid', '=', 6)
-                ->orWhere('quotation_details.is_valid', '=', 1);
+                    ->orWhere('quotation_details.is_valid', '=', 1);
             })
-			->orderBy('products.prod_name', 'ASC')
-			->distinct()
-			->get(['quotation_details.id_product']);
+            ->orderBy('products.prod_name', 'ASC')
+            ->distinct()
+            ->get(['quotation_details.product_id']);
 
-		if (!empty($app)) {
-			return $app;
-		} else {
-			$app[] = "";
-			return $app;
-		}
-	}
+        if (! empty($app)) {
+            return $app;
+        } else {
+            $app[] = '';
+
+            return $app;
+        }
+    }
 
     public function client()
     {
-        return $this->belongsTo(Client::class, 'id_client', 'id_client');
+        return $this->belongsTo(Client::class, 'client_id', 'id');
     }
 
     public function payterm()
     {
-        return $this->belongsTo(PaymentTerm::class, 'id_payterm', 'id_payterms');
+        return $this->belongsTo(PaymentTerm::class, 'payterm_id', 'id');
     }
 
     public function prodAuthLevel()
     {
-        return $this->belongsTo(ProductAuthLevel::class, 'id_prod_auth_level', 'id_level');
+        return $this->belongsTo(ProductAuthLevel::class, 'prod_auth_level_id', 'id');
     }
 
     public function product()
     {
-        return $this->belongsTo(Product::class, 'id_product', 'id_product');
+        return $this->belongsTo(Product::class, 'product_id', 'id');
     }
 
     public function quotation()
     {
-        return $this->belongsTo(Quotation::class, 'id_quotation', 'id_quotation');
+        return $this->belongsTo(Quotation::class, 'quotation_id', 'id');
     }
 }

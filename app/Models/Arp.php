@@ -6,7 +6,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class Arp extends Model
 {
-    protected $primaryKey = 'id';
     protected $fillable = [
         'name',
         'year',
@@ -14,7 +13,6 @@ class Arp extends Model
         'std',
     ];
 
-    
     public function arpBusinessCase()
     {
         return $this->hasMany(ArpBusinessCase::class, 'arp_id', 'id');

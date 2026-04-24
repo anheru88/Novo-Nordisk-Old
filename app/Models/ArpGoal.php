@@ -6,8 +6,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class ArpGoal extends Model
 {
-    protected $primaryKey = 'id_goal';
-
     protected $fillable = [
         'prod_sap_code',
         'goal_name',

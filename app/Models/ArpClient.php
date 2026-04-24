@@ -6,8 +6,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class ArpClient extends Model
 {
-    protected $primaryKey = 'id_client';
-
     protected $fillable = [
         'client_name',
         'client_sap_code',

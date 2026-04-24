@@ -6,7 +6,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class ArpService extends Model
 {
-    protected $primaryKey = 'id';
     protected $fillable = [
         'name',
         'arps_id',

@@ -6,10 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class SaleDetail extends Model
 {
-    protected $primaryKey = 'id_sale_details';
-
     protected $fillable = [
-        'id_sales',
+        'sales_id',
         'client_sap_code',
         'prod_sap_code',
         'po_number',
@@ -28,10 +26,8 @@ class SaleDetail extends Model
         'value_mdkk',
     ];
 
-
-    
     public function sales()
     {
-        return $this->belongsTo(Sale::class, 'id_sales', 'id_sales');
+        return $this->belongsTo(Sale::class, 'sales_id', 'id');
     }
 }

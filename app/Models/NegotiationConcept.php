@@ -6,8 +6,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class NegotiationConcept extends Model
 {
-    protected $primaryKey = 'id_negotiation_concepts';
-
     /**
      * Los atributos que son asignados en masa
      *
@@ -19,6 +17,4 @@ class NegotiationConcept extends Model
         'concept_compress',
         'sap_concept',
     ];
-
-
-    }
+}

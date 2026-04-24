@@ -6,16 +6,14 @@ use Illuminate\Database\Eloquent\Model;
 
 class ProductPrice extends Model
 {
-    protected $primaryKey = 'id_productxprices';
-
     /**
      * Los atributos que son asignados en masa
      *
      * @var array
      */
     protected $fillable = [
-        'id_product',
-        'id_pricelists',
+        'product_id',
+        'pricelists_id',
         'prod_sap_code',
         'v_institutional_price',
         'v_commercial_price',
@@ -27,14 +25,13 @@ class ProductPrice extends Model
         'comments',
     ];
 
-    
     public function pricelists()
     {
-        return $this->belongsTo(PriceList::class, 'id_pricelists', 'id_pricelists');
+        return $this->belongsTo(PriceList::class, 'pricelists_id', 'id');
     }
 
     public function product()
     {
-        return $this->belongsTo(Product::class, 'id_product', 'id_product');
+        return $this->belongsTo(Product::class, 'product_id', 'id');
     }
 }

@@ -6,8 +6,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class PaymentTerm extends Model
 {
-    protected $primaryKey = 'id_payterms';
-
     /**
      * Los atributos que son asignados en masa
      *
@@ -19,14 +17,13 @@ class PaymentTerm extends Model
         'payterm_code',
     ];
 
-    
     public function clients()
     {
-        return $this->hasMany(Client::class, 'id_payterm', 'id_payterms');
+        return $this->hasMany(Client::class, 'payterm_id', 'id');
     }
 
     public function quotationsDetails()
     {
-        return $this->hasMany(QuotationDetail::class, 'id_payterm', 'id_payterms');
+        return $this->hasMany(QuotationDetail::class, 'payterm_id', 'id');
     }
 }

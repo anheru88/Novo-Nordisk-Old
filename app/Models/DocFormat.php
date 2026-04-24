@@ -6,16 +6,13 @@ use Illuminate\Database\Eloquent\Model;
 
 class DocFormat extends Model
 {
-    protected $primaryKey = 'id_format';
-
-
     /**
      * Los atributos que son asignados en masa
      *
      * @var array
      */
     protected $fillable = [
-        'id_formattype',
+        'formattype_id',
         'name',
         'body',
         'conditions_time',
@@ -32,6 +29,6 @@ class DocFormat extends Model
 
     public function formattype()
     {
-        return $this->belongsTo(DocFormatType::class, 'id_formattype', 'id_formattype');
+        return $this->belongsTo(DocFormatType::class, 'formattype_id', 'id');
     }
 }

@@ -15,8 +15,6 @@ class ArpBusinessCase extends Model
         'service_arp_id',
     ];
 
-
-    
     public function arp()
     {
         return $this->belongsTo(Arp::class, 'arp_id', 'id');
@@ -24,6 +22,6 @@ class ArpBusinessCase extends Model
 
     public function brand()
     {
-        return $this->belongsTo(Brand::class, 'brand_id', 'id_brand');
+        return $this->belongsTo(Brand::class, 'brand_id', 'id');
     }
 }

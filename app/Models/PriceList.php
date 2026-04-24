@@ -6,29 +6,26 @@ use Illuminate\Database\Eloquent\Model;
 
 class PriceList extends Model
 {
-    protected $primaryKey = 'id_pricelists';
-
     /**
      * Los atributos que son asignados en masa
      *
      * @var array
      */
     protected $fillable = [
-        'id_authorizer_user',
+        'authorizer_user_id',
         'list_version',
         'active',
         'comments',
         'list_name',
     ];
 
-    
     public function productAuthLevels()
     {
-        return $this->hasMany(ProductAuthLevel::class, 'id_pricelists', 'id_pricelists');
+        return $this->hasMany(ProductAuthLevel::class, 'pricelists_id', 'id');
     }
 
     public function productxprices()
     {
-        return $this->hasMany(ProductPrice::class, 'id_pricelists', 'id_pricelists');
+        return $this->hasMany(ProductPrice::class, 'pricelists_id', 'id');
     }
 }

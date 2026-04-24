@@ -6,22 +6,20 @@ use Illuminate\Database\Eloquent\Model;
 
 class ClientFile extends Model
 {
-    protected $primaryKey = 'id_files';
-
     /**
      * Los atributos que son asignados en masa
      *
      * @var array
      */
     protected $fillable = [
-        'id_client',
+        'client_id',
         'file_folder',
         'file_name',
+        'size',
     ];
 
-    
     public function client()
     {
-        return $this->belongsTo(Client::class, 'id_client', 'id_client');
+        return $this->belongsTo(Client::class, 'client_id', 'id');
     }
 }

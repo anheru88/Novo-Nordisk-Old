@@ -6,11 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Location extends Model
 {
-    
     public $timestamps = false;
-//Tabla a negociar
-
-    protected $primaryKey = 'id_locations';
+    // Tabla a negociar
 
     /**
      * Los atributos que son asignados en masa
@@ -23,48 +20,48 @@ class Location extends Model
         'loc_codecity',
     ];
 
-
     public static function getCities($id_department)
     {
-        $codedep = Location::where('id_locations',$id_department)->first();
+        $codedep = Location::where('id', $id_department)->first();
         $dep = \DB::table('locations')
-        ->select('loc_codedep','loc_name','id_locations')
-        ->where('loc_codecity', '=', $codedep->loc_codedep)
-        ->orderBy('loc_name', 'ASC')
-        ->get();
+            ->select('loc_codedep', 'loc_name', 'id')
+            ->where('loc_codecity', '=', $codedep->loc_codedep)
+            ->orderBy('loc_name', 'ASC')
+            ->get();
 
-       // dd($dep);
+        // dd($dep);
 
         return $dep;
     }
 
-    public static function getDepartments(){
+    public static function getDepartments()
+    {
         $dep = \DB::table('locations')
-        ->select('loc_codedep','loc_name','id_locations')
-        ->where('loc_codecity', '=', 0)
-        ->orderBy('loc_name', 'ASC')
-        ->get();
+            ->select('loc_codedep', 'loc_name', 'id')
+            ->where('loc_codecity', '=', 0)
+            ->orderBy('loc_name', 'ASC')
+            ->get();
 
         return $dep;
     }
 
     public function clientsByCity()
     {
-        return $this->hasMany(Client::class, 'id_city', 'id_locations');
+        return $this->hasMany(Client::class, 'city_id', 'id');
     }
 
     public function clientsByDepartment()
     {
-        return $this->hasMany(Client::class, 'id_department', 'id_locations');
+        return $this->hasMany(Client::class, 'department_id', 'id');
     }
 
     public function quotations()
     {
-        return $this->hasMany(Quotation::class, 'id_city', 'id_locations');
+        return $this->hasMany(Quotation::class, 'city_id', 'id');
     }
 
     public function negotiations()
     {
-        return $this->hasMany(Negotiation::class, 'id_city', 'id_locations');
+        return $this->hasMany(Negotiation::class, 'city_id', 'id');
     }
 }

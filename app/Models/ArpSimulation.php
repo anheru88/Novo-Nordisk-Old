@@ -6,13 +6,12 @@ use Illuminate\Database\Eloquent\Model;
 
 class ArpSimulation extends Model
 {
-    protected $primaryKey = 'id';
     protected $fillable = [
         'simulation_name',
     ];
 
-    //Relations
-    
+    // Relations
+
     public function arpSimulationsDetails()
     {
         return $this->hasMany(ArpSimulationDetail::class, 'arp_simulation_id', 'id');

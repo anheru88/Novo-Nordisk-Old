@@ -6,9 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class CreditNoteDetail extends Model
 {
-    protected $primaryKey = 'id_credit_notes_details';
     protected $fillable = [
-        'id_credit_notes_clients',
+        'credit_notes_clients_id',
         'prod_sap_code',
         'real_qty',
         'nc_value',
@@ -17,10 +16,8 @@ class CreditNoteDetail extends Model
         'concept',
     ];
 
-
-    
     public function creditNotesClients()
     {
-        return $this->belongsTo(CreditNoteClient::class, 'id_credit_notes_clients', 'id_credit_notes_clients');
+        return $this->belongsTo(CreditNoteClient::class, 'credit_notes_clients_id', 'id');
     }
 }

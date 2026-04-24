@@ -6,17 +6,15 @@ use Illuminate\Database\Eloquent\Model;
 
 class NegotiationStatusChange extends Model
 {
-    protected $primaryKey = 'id';
     protected $fillable = [
         'status_id',
         'user_id',
         'negotiation_id',
     ];
 
-    
     public function negotiation()
     {
-        return $this->belongsTo(Negotiation::class, 'negotiation_id', 'id_negotiation');
+        return $this->belongsTo(Negotiation::class, 'negotiation_id', 'id');
     }
 
     public function status()
