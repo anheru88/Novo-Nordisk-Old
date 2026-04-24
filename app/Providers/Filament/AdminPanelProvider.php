@@ -22,6 +22,7 @@ use Illuminate\Cookie\Middleware\EncryptCookies;
 use Illuminate\Foundation\Http\Middleware\PreventRequestForgery;
 use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\StartSession;
+use Illuminate\Support\HtmlString;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 
 class AdminPanelProvider extends PanelProvider
@@ -102,32 +103,40 @@ class AdminPanelProvider extends PanelProvider
      */
     protected function placeholderNavigationItems(): array
     {
-        // Tuple shape: [label, group, icon, permission, sort, done]
+        // Tuple shape: [label, group, icon, permission, sort, done, blocked]
         $items = [
             // Operaciones
-            ['Cotizaciones',               'Operaciones',        Heroicon::OutlinedDocumentText,       'quotations.index',   10, false],
-            ['Negociaciones',              'Operaciones',        Heroicon::OutlinedBriefcase,          'negotiations.index', 20, false],
-            ['Simulador ARP',              'Operaciones',        Heroicon::OutlinedCalculator,         'arp.simulations',    30, false],
+            ['Cotizaciones',               'Operaciones',        Heroicon::OutlinedDocumentText,       'quotations.index',   10, false, false],
+            ['Negociaciones',              'Operaciones',        Heroicon::OutlinedBriefcase,          'negotiations.index', 20, false, false],
+            ['Simulador ARP',              'Operaciones',        Heroicon::OutlinedCalculator,         'arp.simulations',    30, false, false],
 
             // Configuración
-            ['Clientes',                   'Configuración',      Heroicon::OutlinedBuildingOffice2,    'clients.index',      10, false],
-            ['Productos',                  'Configuración',      Heroicon::OutlinedBeaker,             'products.index',     20, false],
-            ['Precios',                    'Configuración',      Heroicon::OutlinedBanknotes,          'prices.index',       30, false],
-            ['Escalas',                    'Configuración',      Heroicon::OutlinedChartBar,           null,                 40, false],
-            ['Formatos de documentos',     'Configuración',      Heroicon::OutlinedDocumentDuplicate,  null,                 50, false],
-            ['ARP',                        'Configuración',      Heroicon::OutlinedCube,               'arp.index',          60, false],
+            ['Clientes',                   'Configuración',      Heroicon::OutlinedBuildingOffice2,    'clients.index',      10, false, false],
+            ['Productos',                  'Configuración',      Heroicon::OutlinedBeaker,             'products.index',     20, false, false],
+            ['Precios',                    'Configuración',      Heroicon::OutlinedBanknotes,          'prices.index',       30, false, false],
+            ['Escalas',                    'Configuración',      Heroicon::OutlinedChartBar,           null,                 40, false, false],
+            ['Formatos de documentos',     'Configuración',      Heroicon::OutlinedDocumentDuplicate,  null,                 50, false, true],
+            ['ARP',                        'Configuración',      Heroicon::OutlinedCube,               'arp.index',          60, false, true],
 
             // Informes
-            ['Reportes',                   'Informes',           Heroicon::OutlinedChartPie,           'reportes.index',     10, false],
-            ['Notas',                      'Informes',           Heroicon::OutlinedDocumentMinus,      'reportes.creditnotes', 20, false],
-            ['SAP',                        'Informes',           Heroicon::OutlinedArrowDownTray,      'reportes.export',    30, false],
+            ['Reportes',                   'Informes',           Heroicon::OutlinedChartPie,           'reportes.index',     10, false, false],
+            ['Notas',                      'Informes',           Heroicon::OutlinedDocumentMinus,      'reportes.creditnotes', 20, false, false],
+            ['SAP',                        'Informes',           Heroicon::OutlinedArrowDownTray,      'reportes.export',    30, false, false],
         ];
 
-        return array_map(fn (array $i) => NavigationItem::make($i[5] ? $i[0].' ✓' : $i[0])
-            ->group($i[1])
-            ->icon($i[2])
-            ->url(fn () => '#')
-            ->visible(fn () => $i[3] === null || auth()->user()?->can($i[3]))
-            ->sort($i[4]), $items);
+        return array_map(function (array $i) {
+            $label = match (true) {
+                $i[6] ?? false => new HtmlString('<span style="color:#dc2626;">'.e($i[0]).' ✗</span>'),
+                $i[5] => $i[0].' ✓',
+                default => $i[0],
+            };
+
+            return NavigationItem::make($label)
+                ->group($i[1])
+                ->icon($i[2])
+                ->url(fn () => '#')
+                ->visible(fn () => $i[3] === null || auth()->user()?->can($i[3]))
+                ->sort($i[4]);
+        }, $items);
     }
 }
