@@ -46,22 +46,22 @@ class CommercialPricesRelationManager extends RelationManager
                     ->alignment(Alignment::Center)
                     ->badge()
                     ->color('info')
-                    ->state(fn (ProductPrice $r): string => $this->discountPrice($r, 2))
-                    ->description(fn (ProductPrice $r): ?string => $this->discountPercent($r, 2), position: 'below'),
+                    ->state(fn (ProductPrice $r): string => $this->discountPercent($r, 2) ?? '—')
+                    ->description(fn (ProductPrice $r): string => $this->discountPrice($r, 2), position: 'above'),
                 TextColumn::make('discount_n3')
                     ->label('Descuento Nivel 3')
                     ->alignment(Alignment::Center)
                     ->badge()
                     ->color('info')
-                    ->state(fn (ProductPrice $r): string => $this->discountPrice($r, 3))
-                    ->description(fn (ProductPrice $r): ?string => $this->discountPercent($r, 3), position: 'below'),
+                    ->state(fn (ProductPrice $r): string => $this->discountPercent($r, 3) ?? '—')
+                    ->description(fn (ProductPrice $r): string => $this->discountPrice($r, 3), position: 'above'),
                 TextColumn::make('discount_n4')
                     ->label('Descuento Nivel 4')
                     ->alignment(Alignment::Center)
                     ->badge()
                     ->color('info')
-                    ->state(fn (ProductPrice $r): string => $this->discountPrice($r, 4))
-                    ->description(fn (ProductPrice $r): ?string => $this->discountPercent($r, 4), position: 'below'),
+                    ->state(fn (ProductPrice $r): string => $this->discountPercent($r, 4) ?? '—')
+                    ->description(fn (ProductPrice $r): string => $this->discountPrice($r, 4), position: 'above'),
                 TextColumn::make('valid_date_ini')
                     ->label('Vigencia desde')
                     ->date('d-m-Y'),
