@@ -102,36 +102,36 @@ class AdminPanelProvider extends PanelProvider
      */
     protected function placeholderNavigationItems(): array
     {
+        // Tuple shape: [label, group, icon, permission, sort, done]
         $items = [
             // Operaciones
-            ['Cotizaciones',               'Operaciones',        Heroicon::OutlinedDocumentText,       'quotations.index',   10],
-            ['Negociaciones',              'Operaciones',        Heroicon::OutlinedBriefcase,          'negotiations.index', 20],
-            ['Simulador ARP',              'Operaciones',        Heroicon::OutlinedCalculator,         'arp.simulations',    30],
+            ['Cotizaciones',               'Operaciones',        Heroicon::OutlinedDocumentText,       'quotations.index',   10, false],
+            ['Negociaciones',              'Operaciones',        Heroicon::OutlinedBriefcase,          'negotiations.index', 20, false],
+            ['Simulador ARP',              'Operaciones',        Heroicon::OutlinedCalculator,         'arp.simulations',    30, false],
 
             // Configuración
-            ['Clientes',                   'Configuración',      Heroicon::OutlinedBuildingOffice2,    'clients.index',      10],
-            ['Productos',                  'Configuración',      Heroicon::OutlinedBeaker,             'products.index',     20],
-            ['Precios',                    'Configuración',      Heroicon::OutlinedBanknotes,          'prices.index',       30],
-            ['Escalas',                    'Configuración',      Heroicon::OutlinedChartBar,           null,                 40],
-            ['Formatos de documentos',     'Configuración',      Heroicon::OutlinedDocumentDuplicate,  null,                 50],
-            ['ARP',                        'Configuración',      Heroicon::OutlinedCube,               'arp.index',          60],
+            ['Clientes',                   'Configuración',      Heroicon::OutlinedBuildingOffice2,    'clients.index',      10, false],
+            ['Productos',                  'Configuración',      Heroicon::OutlinedBeaker,             'products.index',     20, false],
+            ['Precios',                    'Configuración',      Heroicon::OutlinedBanknotes,          'prices.index',       30, false],
+            ['Escalas',                    'Configuración',      Heroicon::OutlinedChartBar,           null,                 40, false],
+            ['Formatos de documentos',     'Configuración',      Heroicon::OutlinedDocumentDuplicate,  null,                 50, false],
+            ['ARP',                        'Configuración',      Heroicon::OutlinedCube,               'arp.index',          60, false],
 
             // Datos del sistema
-            ['Tipos de cliente',           'Datos del sistema',  Heroicon::OutlinedTag,                null,                 10],
-            ['Métodos de pago',            'Datos del sistema',  Heroicon::OutlinedCreditCard,         null,                 20],
-            ['Líneas de producto',         'Datos del sistema',  Heroicon::OutlinedSquares2x2,         null,                 30],
-            ['Unidades de venta',          'Datos del sistema',  Heroicon::OutlinedScale,              null,                 40],
-            ['Usos adicionales',           'Datos del sistema',  Heroicon::OutlinedLink,               null,                 50],
-            ['Marcas',                     'Datos del sistema',  Heroicon::OutlinedBookmark,           null,                 60],
-            ['Conceptos de negociación',   'Datos del sistema',  Heroicon::OutlinedPaperClip,          null,                 70],
+            ['Tipos de cliente',           'Datos del sistema',  Heroicon::OutlinedTag,                null,                 10, false],
+            ['Métodos de pago',            'Datos del sistema',  Heroicon::OutlinedCreditCard,         null,                 20, false],
+            ['Líneas de producto',         'Datos del sistema',  Heroicon::OutlinedSquares2x2,         null,                 30, false],
+            ['Unidades de venta',          'Datos del sistema',  Heroicon::OutlinedScale,              null,                 40, false],
+            ['Usos adicionales',           'Datos del sistema',  Heroicon::OutlinedLink,               null,                 50, false],
+            ['Conceptos de negociación',   'Datos del sistema',  Heroicon::OutlinedPaperClip,          null,                 70, false],
 
             // Informes
-            ['Reportes',                   'Informes',           Heroicon::OutlinedChartPie,           'reportes.index',     10],
-            ['Notas',                      'Informes',           Heroicon::OutlinedDocumentMinus,      'reportes.creditnotes', 20],
-            ['SAP',                        'Informes',           Heroicon::OutlinedArrowDownTray,      'reportes.export',    30],
+            ['Reportes',                   'Informes',           Heroicon::OutlinedChartPie,           'reportes.index',     10, false],
+            ['Notas',                      'Informes',           Heroicon::OutlinedDocumentMinus,      'reportes.creditnotes', 20, false],
+            ['SAP',                        'Informes',           Heroicon::OutlinedArrowDownTray,      'reportes.export',    30, false],
         ];
 
-        return array_map(fn (array $i) => NavigationItem::make($i[0])
+        return array_map(fn (array $i) => NavigationItem::make($i[5] ? $i[0].' ✓' : $i[0])
             ->group($i[1])
             ->icon($i[2])
             ->url(fn () => '#')

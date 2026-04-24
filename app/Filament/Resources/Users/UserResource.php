@@ -29,6 +29,8 @@ class UserResource extends Resource
 
     protected static ?string $pluralModelLabel = 'Usuarios';
 
+    protected static ?string $navigationLabel = 'Usuarios ✓';
+
     protected static ?string $recordTitleAttribute = 'name';
 
     public static function getGloballySearchableAttributes(): array
@@ -44,6 +46,11 @@ class UserResource extends Resource
     public static function table(Table $table): Table
     {
         return UsersTable::configure($table);
+    }
+
+    public static function getNavigationBadge(): ?string
+    {
+        return (string) User::query()->count();
     }
 
     public static function getRelations(): array

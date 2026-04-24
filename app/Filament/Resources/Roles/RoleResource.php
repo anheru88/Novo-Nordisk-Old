@@ -29,6 +29,8 @@ class RoleResource extends Resource
 
     protected static ?string $pluralModelLabel = 'Roles';
 
+    protected static ?string $navigationLabel = 'Roles ✓';
+
     protected static ?string $recordTitleAttribute = 'name';
 
     public static function form(Schema $schema): Schema
@@ -39,6 +41,11 @@ class RoleResource extends Resource
     public static function table(Table $table): Table
     {
         return RolesTable::configure($table);
+    }
+
+    public static function getNavigationBadge(): ?string
+    {
+        return (string) Role::query()->count();
     }
 
     public static function getRelations(): array

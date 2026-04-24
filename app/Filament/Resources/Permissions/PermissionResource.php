@@ -29,6 +29,8 @@ class PermissionResource extends Resource
 
     protected static ?string $pluralModelLabel = 'Permisos';
 
+    protected static ?string $navigationLabel = 'Permisos ✓';
+
     protected static ?string $recordTitleAttribute = 'name';
 
     public static function form(Schema $schema): Schema
@@ -39,6 +41,11 @@ class PermissionResource extends Resource
     public static function table(Table $table): Table
     {
         return PermissionsTable::configure($table);
+    }
+
+    public static function getNavigationBadge(): ?string
+    {
+        return (string) Permission::query()->count();
     }
 
     public static function getRelations(): array
