@@ -41,14 +41,7 @@ class ListFolderRepositories extends Page
     {
         $folder = $this->currentFolder();
 
-        return $folder ? $folder->folder_name : 'Docs Genéricos';
-    }
-
-    public function getSubheading(): ?string
-    {
-        $folder = $this->currentFolder();
-
-        return $folder?->folder_url ?: null;
+        return $folder ? $folder->name : 'Docs Genéricos';
     }
 
     public function currentFolder(): ?FolderRepository
@@ -58,7 +51,7 @@ class ListFolderRepositories extends Page
 
     public function subfolders(): Collection
     {
-        $query = FolderRepository::query()->withCount('docRepository')->orderBy('folder_name');
+        $query = FolderRepository::query()->withCount('docRepository')->orderBy('name');
 
         if ($this->folderId === null) {
             $existingIds = FolderRepository::query()->pluck('id');
@@ -68,7 +61,7 @@ class ListFolderRepositories extends Page
         }
 
         if ($this->search) {
-            $query->where('folder_name', 'like', '%'.$this->search.'%');
+            $query->where('name', 'like', '%'.$this->search.'%');
         }
 
         return $query->get();
@@ -78,8 +71,8 @@ class ListFolderRepositories extends Page
     {
         return DocRepository::query()
             ->where('folder_id', $this->folderId ?? 0)
-            ->when($this->search, fn ($q) => $q->where('doc_name', 'like', '%'.$this->search.'%'))
-            ->orderBy('doc_name')
+            ->when($this->search, fn ($q) => $q->where('name', 'like', '%'.$this->search.'%'))
+            ->orderBy('name')
             ->get();
     }
 
@@ -95,7 +88,7 @@ class ListFolderRepositories extends Page
             return FileIconResolver::formatBytes((int) $doc->size);
         }
 
-        return FileIconResolver::humanSize('public', $doc->doc_name);
+        return FileIconResolver::humanSize('public', $doc->name);
     }
 
     public function content(Schema $schema): Schema
@@ -137,7 +130,7 @@ class ListFolderRepositories extends Page
                 ->visible(fn (): bool => $this->folderId !== null)
                 ->state(fn (): Collection => $this->sidebarTreeNodes())
                 ->schema([
-                    TextEntry::make('folder_name')
+                    TextEntry::make('name')
                         ->hiddenLabel()
                         ->icon(Heroicon::OutlinedFolder)
                         ->iconColor(fn (?Model $record): string => $record?->is_active ? 'warning' : 'gray')
@@ -158,7 +151,7 @@ class ListFolderRepositories extends Page
 
         /** @var Collection<int, FolderRepository> $all */
         $all = FolderRepository::query()
-            ->get(['id', 'id_parent', 'folder_name'])
+            ->get(['id', 'id_parent', 'name'])
             ->keyBy('id');
 
         $existingIds = $all->keys()->all();
@@ -185,6 +178,12 @@ class ListFolderRepositories extends Page
     protected function mainSchema(): array
     {
         return [
+            TextEntry::make('sectionBreadcrumb')
+                ->hiddenLabel()
+                ->state(fn (): string => $this->sectionBreadcrumbHtml())
+                ->visible(fn (): bool => $this->folderId !== null)
+                ->html(),
+
             RepeatableEntry::make('folderRows')
                 ->hiddenLabel()
                 ->state(fn (): Collection => $this->subfolders())
@@ -195,7 +194,7 @@ class ListFolderRepositories extends Page
                     TableColumn::make('Acciones')->alignment(Alignment::End)->width('120px'),
                 ])
                 ->schema([
-                    TextEntry::make('folder_name')
+                    TextEntry::make('name')
                         ->hiddenLabel()
                         ->icon(Heroicon::Folder)
                         ->iconColor('warning')
@@ -212,18 +211,18 @@ class ListFolderRepositories extends Page
                             ->iconButton()
                             ->icon(Heroicon::OutlinedPencilSquare)
                             ->color('warning')
-                            ->fillForm(fn (Model $record): array => ['folder_name' => $record->folder_name])
+                            ->fillForm(fn (Model $record): array => ['name' => $record->name])
                             ->schema([
-                                TextInput::make('folder_name')->label('Nombre')->required()->maxLength(191),
+                                TextInput::make('name')->label('Nombre')->required()->maxLength(191),
                             ])
-                            ->action(fn (array $data, Model $record) => $this->renameFolder($record->id, $data['folder_name'])),
+                            ->action(fn (array $data, Model $record) => $this->renameFolder($record->id, $data['name'])),
                         Action::make('deleteFolder')
                             ->iconButton()
                             ->icon(Heroicon::OutlinedTrash)
                             ->color('danger')
                             ->requiresConfirmation()
                             ->modalHeading('Eliminar carpeta')
-                            ->modalDescription(fn (Model $record): string => "¿Eliminar la carpeta '{$record->folder_name}' y todo su contenido?")
+                            ->modalDescription(fn (Model $record): string => "¿Eliminar la carpeta '{$record->name}' y todo su contenido?")
                             ->action(fn (Model $record) => $this->deleteFolder($record->id)),
                     ])->alignment(Alignment::End),
                 ]),
@@ -238,9 +237,15 @@ class ListFolderRepositories extends Page
                     TableColumn::make('Acciones')->alignment(Alignment::End)->width('160px'),
                 ])
                 ->schema([
-                    TextEntry::make('doc_name')
+                    TextEntry::make('name')
                         ->hiddenLabel()
-                        ->icon(fn (Model $record): string => $this->iconFor($record->doc_name)['icon'])
+                        ->icon(fn (Model $record): string|Heroicon => $this->downloadDocUrl($record) !== null
+                            ? $this->iconFor($record->name)['icon']
+                            : Heroicon::OutlinedExclamationTriangle)
+                        ->iconColor(fn (Model $record): string => $this->downloadDocUrl($record) !== null ? 'gray' : 'danger')
+                        ->color(fn (Model $record): ?string => $this->downloadDocUrl($record) !== null ? null : 'danger')
+                        ->tooltip(fn (Model $record): ?string => $this->downloadDocUrl($record) !== null ? null : 'Archivo no encontrado en el almacenamiento')
+                        ->url(fn (Model $record): ?string => $this->downloadDocUrl($record), shouldOpenInNewTab: true)
                         ->formatStateUsing(fn (string $state): string => basename($state)),
                     TextEntry::make('created_at')
                         ->hiddenLabel()
@@ -249,19 +254,13 @@ class ListFolderRepositories extends Page
                         ->size(TextSize::Small)
                         ->date('d-m-Y'),
                     SchemaActions::make([
-                        Action::make('downloadDocument')
-                            ->iconButton()
-                            ->icon(Heroicon::OutlinedArrowDownTray)
-                            ->color('primary')
-                            ->visible(fn (Model $record): bool => $this->downloadDocUrl($record) !== null)
-                            ->url(fn (Model $record): ?string => $this->downloadDocUrl($record), shouldOpenInNewTab: true),
                         Action::make('deleteDocument')
                             ->iconButton()
                             ->icon(Heroicon::OutlinedTrash)
                             ->color('danger')
                             ->requiresConfirmation()
                             ->modalHeading('Eliminar documento')
-                            ->modalDescription(fn (Model $record): string => "¿Eliminar '".basename((string) $record->doc_name)."'?")
+                            ->modalDescription(fn (Model $record): string => "¿Eliminar '".basename((string) $record->name)."'?")
                             ->action(fn (Model $record) => $this->deleteDocument($record->id)),
                     ])->alignment(Alignment::End),
                 ]),
@@ -292,20 +291,23 @@ class ListFolderRepositories extends Page
 
     public function renameFolder(int $id, string $name): void
     {
-        FolderRepository::find($id)?->update(['folder_name' => $name]);
+        FolderRepository::find($id)?->update(['name' => $name]);
         Notification::make()->title('Carpeta actualizada')->success()->send();
     }
 
     public function getBreadcrumbs(): array
     {
-        $crumbs = [static::getResource()::getUrl('index') => 'Raíz'];
+        return [];
+    }
 
+    protected function sectionBreadcrumbHtml(): string
+    {
         if ($this->folderId === null) {
-            return $crumbs;
+            return '';
         }
 
         $map = FolderRepository::query()
-            ->get(['id', 'id_parent', 'folder_name'])
+            ->get(['id', 'id_parent', 'name'])
             ->keyBy('id');
 
         $trail = [];
@@ -315,14 +317,22 @@ class ListFolderRepositories extends Page
             $current = $current->id_parent ? $map->get($current->id_parent) : null;
         }
 
-        array_pop($trail);
-
         $base = static::getResource()::getUrl('index');
-        foreach ($trail as $crumb) {
-            $crumbs[$base.'?folder='.$crumb->id] = $crumb->folder_name;
+        $parts = ['<a href="'.e($base).'" class="fi-link fi-link-color-primary">Repositorio</a>'];
+
+        foreach ($trail as $i => $crumb) {
+            $isLast = $i === count($trail) - 1;
+            $parts[] = $isLast
+                ? '<span class="fi-color-gray">'.e($crumb->name).'</span>'
+                : '<a href="'.e($base.'?folder='.$crumb->id).'" class="fi-link fi-link-color-primary">'.e($crumb->name).'</a>';
         }
 
-        return $crumbs;
+        return '<nav class="fi-breadcrumbs"><ol class="fi-breadcrumbs-list">'
+            .implode('<li class="fi-breadcrumbs-separator" aria-hidden="true">/</li>', array_map(
+                fn (string $p): string => '<li class="fi-breadcrumbs-item">'.$p.'</li>',
+                $parts
+            ))
+            .'</ol></nav>';
     }
 
     protected function folderCountLabel(): string
@@ -356,26 +366,27 @@ class ListFolderRepositories extends Page
                 ->label('Volver')
                 ->icon(Heroicon::OutlinedArrowLeft)
                 ->color('gray')
-                ->visible(fn (): bool => $this->folderId !== null)
-                ->url(fn (): string => $this->folderUrl($this->parentFolderId())),
+                ->url(fn (): string => $this->folderId !== null
+                    ? $this->folderUrl($this->parentFolderId())
+                    : route('filament.admin.pages.documentos')),
 
             Action::make('createFolder')
                 ->label('Nueva carpeta')
                 ->icon('heroicon-o-folder-plus')
                 ->schema([
-                    TextInput::make('folder_name')
+                    TextInput::make('name')
                         ->label('Nombre')
                         ->required()
                         ->maxLength(191),
                 ])
                 ->action(function (array $data): void {
                     $parent = $this->currentFolder();
-                    $parentUrl = $parent ? $parent->folder_url : '';
-                    $url = rtrim($parentUrl, '/').'/'.$data['folder_name'];
+                    $parentUrl = $parent ? $parent->url : '';
+                    $url = rtrim($parentUrl, '/').'/'.$data['name'];
 
                     FolderRepository::create([
-                        'folder_name' => $data['folder_name'],
-                        'folder_url' => $url,
+                        'name' => $data['name'],
+                        'url' => $url,
                         'id_parent' => $this->folderId ?? 0,
                     ]);
 
@@ -387,22 +398,22 @@ class ListFolderRepositories extends Page
                 ->icon('heroicon-o-arrow-up-tray')
                 ->visible(fn (): bool => $this->folderId !== null)
                 ->schema([
-                    FileUpload::make('doc_name')
+                    FileUpload::make('name')
                         ->label('Archivo')
                         ->disk('public')
-                        ->directory(fn (): string => 'uploads/'.ltrim($this->currentFolder()?->folder_url ?? '', '/'))
+                        ->directory(fn (): string => 'uploads/'.ltrim($this->currentFolder()?->url ?? '', '/'))
                         ->preserveFilenames()
                         ->required()
                         ->maxSize(51200),
                 ])
                 ->action(function (array $data): void {
-                    $path = (string) $data['doc_name'];
+                    $path = (string) $data['name'];
                     $size = Storage::disk('public')->exists($path)
                         ? Storage::disk('public')->size($path)
                         : null;
 
                     DocRepository::create([
-                        'doc_name' => $path,
+                        'name' => $path,
                         'folder_id' => $this->folderId,
                         'size' => $size,
                     ]);
@@ -425,8 +436,8 @@ class ListFolderRepositories extends Page
             return;
         }
 
-        if ($doc->doc_name) {
-            Storage::disk('public')->delete($doc->doc_name);
+        if ($doc->name) {
+            Storage::disk('public')->delete($doc->name);
         }
 
         $doc->delete();
@@ -435,8 +446,8 @@ class ListFolderRepositories extends Page
 
     public function downloadDocUrl(DocRepository $doc): ?string
     {
-        return $doc->doc_name && Storage::disk('public')->exists($doc->doc_name)
-            ? Storage::disk('public')->url($doc->doc_name)
+        return $doc->name && Storage::disk('public')->exists($doc->name)
+            ? Storage::disk('public')->url($doc->name)
             : null;
     }
 }

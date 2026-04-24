@@ -8,6 +8,7 @@ use App\Models\ClientFile;
 use App\Support\FileIconResolver;
 use Filament\Actions\Action;
 use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\TextInput;
 use Filament\Infolists\Components\RepeatableEntry;
 use Filament\Infolists\Components\RepeatableEntry\TableColumn;
 use Filament\Infolists\Components\TextEntry;
@@ -40,7 +41,7 @@ class ListClientFiles extends Page
     {
         $client = $this->currentClient();
 
-        return $client ? $client->client_name : 'Docs de Clientes';
+        return $client ? $client->name : 'Docs de Clientes';
     }
 
     public function currentClient(): ?Client
@@ -51,9 +52,11 @@ class ListClientFiles extends Page
     public function clients(): Collection
     {
         return Client::query()
-            ->when($this->search, fn ($q) => $q->where('client_name', 'like', '%'.$this->search.'%'))
+            ->when($this->search, fn ($q) => $q->where(fn ($w) => $w
+                ->where('name', 'like', '%'.$this->search.'%')
+                ->orWhere('nit', 'like', '%'.$this->search.'%')))
             ->withCount('clientsFiles')
-            ->orderBy('client_name')
+            ->orderBy('name')
             ->get();
     }
 
@@ -72,48 +75,14 @@ class ListClientFiles extends Page
     public function content(Schema $schema): Schema
     {
         return $schema->components([
-            Grid::make(12)
-                ->schema([
-                    Section::make('Clientes')
-                        ->icon(Heroicon::OutlinedBuildingOffice2)
-                        ->iconColor('info')
-                        ->description(fn (): string => $this->clientCountLabel())
-                        ->columnSpan(['default' => 12, 'sm' => 3])
-                        ->schema($this->sidebarSchema()),
-
-                    Section::make(fn (): string => $this->clientId === null ? 'Clientes' : 'Documentos')
-                        ->icon(Heroicon::OutlinedDocumentDuplicate)
-                        ->iconColor('gray')
-                        ->description(fn (): string => $this->fileCountLabel())
-                        ->columnSpan(['default' => 12, 'sm' => 9])
-                        ->schema($this->mainSchema()),
-                ]),
+            Section::make(fn (): string => $this->clientId === null ? 'Clientes' : 'Documentos')
+                ->icon(Heroicon::OutlinedDocumentDuplicate)
+                ->iconColor('gray')
+                ->description(fn (): string => $this->clientId === null
+                    ? $this->clientsSummaryLabel()
+                    : $this->fileCountLabel())
+                ->schema($this->mainSchema()),
         ]);
-    }
-
-    /** @return array<Component> */
-    protected function sidebarSchema(): array
-    {
-        return [
-            TextEntry::make('clientsRoot')
-                ->hiddenLabel()
-                ->state('Clientes')
-                ->icon(Heroicon::OutlinedBuildingOffice2)
-                ->weight(FontWeight::Medium)
-                ->url(fn (): string => static::getResource()::getUrl('index')),
-
-            RepeatableEntry::make('sidebarClients')
-                ->hiddenLabel()
-                ->state(fn (): Collection => $this->clients())
-                ->placeholder('Sin clientes.')
-                ->schema([
-                    TextEntry::make('client_name')
-                        ->hiddenLabel()
-                        ->icon(Heroicon::OutlinedBuildingOffice2)
-                        ->iconColor('info')
-                        ->url(fn (Model $record): string => $this->clientUrl($record->id)),
-                ]),
-        ];
     }
 
     /** @return array<Component> */
@@ -121,23 +90,31 @@ class ListClientFiles extends Page
     {
         if ($this->clientId === null) {
             return [
+                TextInput::make('search')
+                    ->hiddenLabel()
+                    ->placeholder('Buscar por cliente o NIT...')
+                    ->prefixIcon(Heroicon::OutlinedMagnifyingGlass)
+                    ->live(debounce: 300),
+
                 RepeatableEntry::make('clientRows')
                     ->hiddenLabel()
                     ->state(fn (): Collection => $this->clients())
-                    ->placeholder('No hay clientes registrados.')
+                    ->placeholder(fn (): string => $this->search
+                        ? 'Sin coincidencias para "'.$this->search.'".'
+                        : 'No hay clientes registrados.')
                     ->table([
                         TableColumn::make('Cliente'),
                         TableColumn::make('NIT')->width('180px'),
                         TableColumn::make('Archivos')->alignment(Alignment::End)->width('120px'),
                     ])
                     ->schema([
-                        TextEntry::make('client_name')
+                        TextEntry::make('name')
                             ->hiddenLabel()
                             ->icon(Heroicon::OutlinedBuildingOffice2)
                             ->iconColor('info')
                             ->weight(FontWeight::Medium)
                             ->url(fn (Model $record): string => $this->clientUrl($record->id)),
-                        TextEntry::make('client_nit')
+                        TextEntry::make('nit')
                             ->hiddenLabel()
                             ->placeholder('—')
                             ->size(TextSize::Small),
@@ -152,19 +129,25 @@ class ListClientFiles extends Page
         }
 
         return [
+            TextEntry::make('sectionBreadcrumb')
+                ->hiddenLabel()
+                ->state(fn (): string => $this->sectionBreadcrumbHtml())
+                ->visible(fn (): bool => $this->clientId !== null)
+                ->html(),
+
             Grid::make(['default' => 1, 'sm' => 2, 'lg' => 4])
                 ->schema([
                     TextEntry::make('nit')->label('NIT')
-                        ->state(fn (): ?string => $this->currentClient()?->client_nit)
+                        ->state(fn (): ?string => $this->currentClient()?->nit)
                         ->placeholder('—'),
                     TextEntry::make('contact')->label('Contacto')
-                        ->state(fn (): ?string => $this->currentClient()?->client_contact)
+                        ->state(fn (): ?string => $this->currentClient()?->contact)
                         ->placeholder('—'),
                     TextEntry::make('phone')->label('Teléfono')
-                        ->state(fn (): ?string => $this->currentClient()?->client_phone)
+                        ->state(fn (): ?string => $this->currentClient()?->phone)
                         ->placeholder('—'),
                     TextEntry::make('email')->label('Email')
-                        ->state(fn (): ?string => $this->currentClient()?->client_email)
+                        ->state(fn (): ?string => $this->currentClient()?->email)
                         ->placeholder('—'),
                 ]),
 
@@ -178,9 +161,15 @@ class ListClientFiles extends Page
                     TableColumn::make('Acciones')->alignment(Alignment::End)->width('160px'),
                 ])
                 ->schema([
-                    TextEntry::make('file_name')
+                    TextEntry::make('name')
                         ->hiddenLabel()
-                        ->icon(fn (Model $record): string => $this->iconFor($record->file_name)['icon']),
+                        ->icon(fn (Model $record): string|Heroicon => $this->downloadUrl($record) !== null
+                            ? $this->iconFor($record->name)['icon']
+                            : Heroicon::OutlinedExclamationTriangle)
+                        ->iconColor(fn (Model $record): string => $this->downloadUrl($record) !== null ? 'gray' : 'danger')
+                        ->color(fn (Model $record): ?string => $this->downloadUrl($record) !== null ? null : 'danger')
+                        ->tooltip(fn (Model $record): ?string => $this->downloadUrl($record) !== null ? null : 'Archivo no encontrado en el almacenamiento')
+                        ->url(fn (Model $record): ?string => $this->downloadUrl($record), shouldOpenInNewTab: true),
                     TextEntry::make('created_at')
                         ->hiddenLabel()
                         ->icon(Heroicon::OutlinedCalendar)
@@ -188,23 +177,38 @@ class ListClientFiles extends Page
                         ->size(TextSize::Small)
                         ->date('d-m-Y'),
                     SchemaActions::make([
-                        Action::make('downloadFile')
-                            ->iconButton()
-                            ->icon(Heroicon::OutlinedArrowDownTray)
-                            ->color('primary')
-                            ->visible(fn (Model $record): bool => $this->downloadUrl($record) !== null)
-                            ->url(fn (Model $record): ?string => $this->downloadUrl($record), shouldOpenInNewTab: true),
                         Action::make('deleteFile')
                             ->iconButton()
                             ->icon(Heroicon::OutlinedTrash)
                             ->color('danger')
                             ->requiresConfirmation()
                             ->modalHeading('Eliminar documento')
-                            ->modalDescription(fn (Model $record): string => "¿Eliminar '{$record->file_name}'?")
+                            ->modalDescription(fn (Model $record): string => "¿Eliminar '{$record->name}'?")
                             ->action(fn (Model $record) => $this->deleteFile($record->id)),
                     ])->alignment(Alignment::End),
                 ]),
         ];
+    }
+
+    protected function sectionBreadcrumbHtml(): string
+    {
+        if ($this->clientId === null) {
+            return '';
+        }
+
+        $base = static::getResource()::getUrl('index');
+        $parts = ['<a href="'.e($base).'" class="fi-link fi-link-color-primary">Clientes</a>'];
+
+        if ($client = $this->currentClient()) {
+            $parts[] = '<span class="fi-color-gray">'.e($client->name).'</span>';
+        }
+
+        return '<nav class="fi-breadcrumbs"><ol class="fi-breadcrumbs-list">'
+            .implode('<li class="fi-breadcrumbs-separator" aria-hidden="true">/</li>', array_map(
+                fn (string $p): string => '<li class="fi-breadcrumbs-item">'.$p.'</li>',
+                $parts
+            ))
+            .'</ol></nav>';
     }
 
     protected function clientUrl(int $id): string
@@ -214,14 +218,7 @@ class ListClientFiles extends Page
 
     public function getBreadcrumbs(): array
     {
-        return [static::getResource()::getUrl('index') => 'Clientes'];
-    }
-
-    protected function clientCountLabel(): string
-    {
-        $n = $this->clients()->count();
-
-        return $n.' '.($n === 1 ? 'cliente' : 'clientes');
+        return [];
     }
 
     protected function fileCountLabel(): string
@@ -229,6 +226,15 @@ class ListClientFiles extends Page
         $n = $this->files()->count();
 
         return $n.' '.($n === 1 ? 'archivo' : 'archivos');
+    }
+
+    protected function clientsSummaryLabel(): string
+    {
+        $clients = $this->clients();
+        $c = $clients->count();
+        $f = (int) $clients->sum('clients_files_count');
+
+        return $c.' '.($c === 1 ? 'cliente' : 'clientes').' · '.$f.' '.($f === 1 ? 'archivo' : 'archivos');
     }
 
     public function openClient(int $id): void
@@ -249,15 +255,16 @@ class ListClientFiles extends Page
                 ->label('Volver')
                 ->icon(Heroicon::OutlinedArrowLeft)
                 ->color('gray')
-                ->visible(fn (): bool => $this->clientId !== null)
-                ->url(fn (): string => static::getResource()::getUrl('index')),
+                ->url(fn (): string => $this->clientId !== null
+                    ? static::getResource()::getUrl('index')
+                    : route('filament.admin.pages.documentos')),
 
             Action::make('uploadFile')
                 ->label('Subir documento')
                 ->icon('heroicon-o-arrow-up-tray')
                 ->visible(fn (): bool => $this->clientId !== null)
                 ->schema([
-                    FileUpload::make('file_name')
+                    FileUpload::make('name')
                         ->label('Archivo')
                         ->disk('public')
                         ->directory(fn (): string => 'uploads/'.$this->clientFolder())
@@ -266,15 +273,15 @@ class ListClientFiles extends Page
                         ->maxSize(51200),
                 ])
                 ->action(function (array $data): void {
-                    $path = (string) $data['file_name'];
+                    $path = (string) $data['name'];
                     $size = Storage::disk('public')->exists($path)
                         ? Storage::disk('public')->size($path)
                         : null;
 
                     ClientFile::create([
                         'client_id' => $this->clientId,
-                        'file_folder' => $this->clientFolder(),
-                        'file_name' => basename($path),
+                        'folder' => dirname($path),
+                        'name' => basename($path),
                         'size' => $size,
                     ]);
 
@@ -295,8 +302,8 @@ class ListClientFiles extends Page
             return;
         }
 
-        $path = trim((string) $file->file_folder, '/').'/'.$file->file_name;
-        if ($file->file_name && Storage::disk('public')->exists($path)) {
+        $path = trim((string) $file->folder, '/').'/'.$file->name;
+        if ($file->name && Storage::disk('public')->exists($path)) {
             Storage::disk('public')->delete($path);
         }
 
@@ -308,7 +315,7 @@ class ListClientFiles extends Page
     {
         $path = $this->filePath($file);
 
-        return $file->file_name && Storage::disk('public')->exists($path)
+        return $file->name && Storage::disk('public')->exists($path)
             ? Storage::disk('public')->url($path)
             : null;
     }
@@ -330,6 +337,6 @@ class ListClientFiles extends Page
 
     protected function filePath(ClientFile $file): string
     {
-        return trim((string) $file->file_folder, '/').'/'.$file->file_name;
+        return trim((string) $file->folder, '/').'/'.$file->name;
     }
 }
