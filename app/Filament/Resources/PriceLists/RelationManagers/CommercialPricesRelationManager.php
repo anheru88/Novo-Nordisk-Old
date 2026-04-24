@@ -6,6 +6,7 @@ use App\Models\ProductAuthLevel;
 use App\Models\ProductPrice;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Schemas\Schema;
+use Filament\Support\Enums\Alignment;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Support\Collection;
@@ -42,16 +43,25 @@ class CommercialPricesRelationManager extends RelationManager
                     ->formatStateUsing(fn (?string $state): string => static::formatMax($state)),
                 TextColumn::make('discount_n2')
                     ->label('Descuento Nivel 2')
+                    ->alignment(Alignment::Center)
+                    ->badge()
+                    ->color('info')
                     ->state(fn (ProductPrice $r): string => $this->discountPrice($r, 2))
-                    ->description(fn (ProductPrice $r): ?string => $this->discountPercent($r, 2)),
+                    ->description(fn (ProductPrice $r): ?string => $this->discountPercent($r, 2), position: 'below'),
                 TextColumn::make('discount_n3')
                     ->label('Descuento Nivel 3')
+                    ->alignment(Alignment::Center)
+                    ->badge()
+                    ->color('info')
                     ->state(fn (ProductPrice $r): string => $this->discountPrice($r, 3))
-                    ->description(fn (ProductPrice $r): ?string => $this->discountPercent($r, 3)),
+                    ->description(fn (ProductPrice $r): ?string => $this->discountPercent($r, 3), position: 'below'),
                 TextColumn::make('discount_n4')
                     ->label('Descuento Nivel 4')
+                    ->alignment(Alignment::Center)
+                    ->badge()
+                    ->color('info')
                     ->state(fn (ProductPrice $r): string => $this->discountPrice($r, 4))
-                    ->description(fn (ProductPrice $r): ?string => $this->discountPercent($r, 4)),
+                    ->description(fn (ProductPrice $r): ?string => $this->discountPercent($r, 4), position: 'below'),
                 TextColumn::make('valid_date_ini')
                     ->label('Vigencia desde')
                     ->date('d-m-Y'),
